@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: code-a-nova-backend
+    name: wampire-backend
     runtime: node
     plan: free
     rootDir: server
@@ -20,7 +20,7 @@ services:
       - key: EMAIL_PASS
         sync: false
       - key: EMAIL_FROM_NAME
-        value: Code-a-Nova
+        value: Wampire
       - key: CLIENT_URL
         sync: false
 

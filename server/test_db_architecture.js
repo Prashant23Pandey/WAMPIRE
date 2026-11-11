@@ -6,7 +6,7 @@ import initializeDatabase from './config/initDB.js';
 
 async function runDatabaseTests() {
   console.log('='.repeat(65));
-  console.log('     CODE-A-NOVA MONGODB ARCHITECTURE & SCHEMA TEST SUITE');
+  console.log('     WAMPIRE MONGODB ARCHITECTURE & SCHEMA TEST SUITE');
   console.log('='.repeat(65));
 
   let passed = 0;
@@ -137,7 +137,7 @@ async function runDatabaseTests() {
   const validContact = new Contact({
     name: 'Sponsor Lead',
     email: 'sponsor@company.com',
-    message: 'We are interested in sponsoring the upcoming CODE-A-NOVA hackathon event.',
+    message: 'We are interested in sponsoring the upcoming WAMPIRE hackathon event.',
   });
   assert(validContact.validateSync() === undefined, 'Accepts valid contact submission');
 

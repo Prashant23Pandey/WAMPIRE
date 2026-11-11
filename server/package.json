@@ -1,7 +1,7 @@
 {
-  "name": "code-a-nova-server",
+  "name": "wampire-server",
   "version": "1.0.0",
-  "description": "Backend API for CODE-A-NOVA Hackathon Registration Portal",
+  "description": "Backend API for WAMPIRE Hackathon Registration Portal",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -35,8 +35,8 @@
     "express",
     "mongodb",
     "jwt",
-    "code-a-nova"
+    "wampire"
   ],
-  "author": "CODE-A-NOVA Team",
+  "author": "WAMPIRE Team",
   "license": "ISC"
 }

@@ -1,13 +1,13 @@
-# CODE-A-NOVA | Production-Ready Hackathon Management Platform
+# WAMPIRE | Production-Ready Hackathon Management Platform
 
-[![CI/CD Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/code-a-nova/code-a-nova)
+[![CI/CD Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/wampire/wampire)
 [![Node.js](https://img.shields.io/badge/Node.js-v18%2B-blue.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-v18.3-61dafb.svg)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-v3.4-38b2ac.svg)](https://tailwindcss.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248.svg)](https://www.mongodb.com/atlas)
 [![License](https://img.shields.io/badge/license-MIT-purple.svg)](LICENSE)
 
-A modern, high-performance, enterprise-grade full-stack MERN (MongoDB, Express.js, React, Node.js) web application engineered for hackathons, university developer sprints, team formations, and project submissions. CODE-A-NOVA delivers cryptographic user authentication, automated email notifications, strict input validation, real-time rate limiting, dynamic team registration (1 to 5 members), and an administrative evaluation hub.
+A modern, high-performance, enterprise-grade full-stack MERN (MongoDB, Express.js, React, Node.js) web application engineered for hackathons, university developer sprints, team formations, and project submissions. WAMPIRE delivers cryptographic user authentication, automated email notifications, strict input validation, real-time rate limiting, dynamic team registration (1 to 5 members), and an administrative evaluation hub.
 
 ---
 
@@ -30,7 +30,7 @@ A modern, high-performance, enterprise-grade full-stack MERN (MongoDB, Express.j
 
 ## 1. Project Overview
 
-CODE-A-NOVA is an end-to-end hackathon operations platform designed to solve the chaos of participant registration, identity verification, team formation, project tracking, and judge evaluation.
+WAMPIRE is an end-to-end hackathon operations platform designed to solve the chaos of participant registration, identity verification, team formation, project tracking, and judge evaluation.
 
 ### Key Objectives
 - **Security-First Architecture:** Eliminates fake registrations using cryptographically secure 6-digit OTPs dispatched via Gmail SMTP, enforced with bcrypt hashing and sliding-window rate limiters.
@@ -156,12 +156,12 @@ flowchart TD
 ### Prerequisites
 - **Node.js:** v18.0.0 or higher ([Download Node.js](https://nodejs.org/))
 - **npm:** v9.0.0 or higher
-- **MongoDB:** Active MongoDB Atlas cluster or local MongoDB instance (`mongodb://localhost:27017/code-a-nova`)
+- **MongoDB:** Active MongoDB Atlas cluster or local MongoDB instance (`mongodb://localhost:27017/wampire`)
 - **Gmail Account:** For SMTP email dispatch (requires a 16-character [Google App Password](https://myaccount.google.com/apppasswords))
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/code-a-nova/code-a-nova.git
+git clone https://github.com/wampire/wampire.git
 cd "CODE A NOVA"
 ```
 
@@ -234,7 +234,7 @@ npm --prefix client test
 | `JWT_EXPIRES_IN` | No | `7d` | Token expiration lifespan |
 | `EMAIL_USER` | Yes | - | Gmail address used for sending automated emails |
 | `EMAIL_PASS` | Yes | - | 16-character Google App Password (not your personal password) |
-| `EMAIL_FROM_NAME` | No | `Code-a-Nova` | Invariant branding sender name |
+| `EMAIL_FROM_NAME` | No | `Wampire` | Invariant branding sender name |
 | `CLIENT_URL` | Yes | `http://localhost:5173` | Allowed frontend origins (comma-separated for multiple) |
 
 > [!CAUTION]
@@ -268,7 +268,7 @@ npm --prefix client test
    - Choose **Drivers** (Node.js, 5.5 or later).
    - Copy the URI format:
      ```text
-     mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/code_a_nova?retryWrites=true&w=majority&appName=CodeANova
+     mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/wampire?retryWrites=true&w=majority&appName=Wampire
      ```
    - Paste it into `server/.env` under `MONGO_URI`, replacing `<username>` and `<password>`.
 
@@ -365,7 +365,7 @@ The public landing page features modern typography, event dates, domain tracks, 
 
 ```text
 +---------------------------------------------------------------------------------------------------------+
-| [LOGO] CODE-A-NOVA             Tracks    Timeline    Prizes    FAQ    Contact          [Sign In] [Register] |
+| [LOGO] WAMPIRE             Tracks    Timeline    Prizes    FAQ    Contact          [Sign In] [Register] |
 +---------------------------------------------------------------------------------------------------------+
 |                                                                                                         |
 |       ✨ THE PREMIER NATIONAL INTER-COLLEGE HACKATHON 2026                                              |
@@ -385,7 +385,7 @@ Six individual auto-focusing numeric input boxes, 60s resend timer, and instant 
 
 ```text
 +---------------------------------------------------------------------------------------------------------+
-|                                      CODE-A-NOVA                                                        |
+|                                      WAMPIRE                                                        |
 |                               Verify Your Account                                                       |
 |                                                                                                         |
 |         We have dispatched a 6-digit verification code to:                                              |
@@ -408,7 +408,7 @@ Authenticated command center displaying verification badges, registration status
 
 ```text
 +---------------------------------------------------------------------------------------------------------+
-| CODE-A-NOVA          [Search Dashboard...]                      🔔 Alerts   (AD) Alex Dev [Logout]      |
+| WAMPIRE          [Search Dashboard...]                      🔔 Alerts   (AD) Alex Dev [Logout]      |
 +----------------------+----------------------------------------------------------------------------------+
 | 📌 Overview          | Welcome back, Alex Dev! 👋                                                       |
 | 👤 My Profile        | Account Status: [ Verified Account ✓ ]   Member Since: Nov 2026                 |
@@ -464,9 +464,9 @@ Live team member builder automatically rendering sub-forms for members 2 through
 - **SMTP Gateway:** Google Gmail SMTP (TLS 465)
 
 ### Live Deployment URLs
-- **Production Web Application:** `https://code-a-nova.vercel.app`
-- **Production Backend API:** `https://code-a-nova-api.onrender.com/api`
-- **Backend Health Check:** `https://code-a-nova-api.onrender.com/api/v1/health`
+- **Production Web Application:** `https://wampire.vercel.app`
+- **Production Backend API:** `https://wampire-api.onrender.com/api`
+- **Backend Health Check:** `https://wampire-api.onrender.com/api/v1/health`
 
 ---
 
@@ -475,7 +475,7 @@ Live team member builder automatically rendering sub-forms for members 2 through
 2. Log into [Render Dashboard](https://dashboard.render.com/) and click **New +** $\rightarrow$ **Web Service**.
 3. Connect your GitHub repository.
 4. Configure service parameters:
-   - **Name:** `code-a-nova-api`
+   - **Name:** `wampire-api`
    - **Root Directory:** `server`
    - **Environment:** `Node`
    - **Build Command:** `npm install`
@@ -484,12 +484,12 @@ Live team member builder automatically rendering sub-forms for members 2 through
    ```env
    NODE_ENV=production
    PORT=5000
-   MONGO_URI=mongodb+srv://<user>:<password>@cluster0.abcde.mongodb.net/code_a_nova?retryWrites=true&w=majority
+   MONGO_URI=mongodb+srv://<user>:<password>@cluster0.abcde.mongodb.net/wampire?retryWrites=true&w=majority
    JWT_SECRET=your_super_secret_64_character_hex_key_here
    EMAIL_USER=your_email@gmail.com
    EMAIL_PASS=your_16_char_google_app_password
-   EMAIL_FROM_NAME=Code-a-Nova
-   CLIENT_URL=https://code-a-nova.vercel.app
+   EMAIL_FROM_NAME=Wampire
+   CLIENT_URL=https://wampire.vercel.app
    ```
 6. Click **Deploy Web Service**.
 
@@ -497,7 +497,7 @@ Live team member builder automatically rendering sub-forms for members 2 through
 
 ### Step-by-Step Frontend Deployment (Vercel)
 1. Log into [Vercel Dashboard](https://vercel.com/) and click **Add New...** $\rightarrow$ **Project**.
-2. Import the `code-a-nova` GitHub repository.
+2. Import the `wampire` GitHub repository.
 3. Configure project settings:
    - **Framework Preset:** `Vite`
    - **Root Directory:** `client`
@@ -505,7 +505,7 @@ Live team member builder automatically rendering sub-forms for members 2 through
    - **Output Directory:** `dist`
 4. Under **Environment Variables**, add:
    ```env
-   VITE_API_URL=https://code-a-nova-api.onrender.com/api
+   VITE_API_URL=https://wampire-api.onrender.com/api
    ```
 5. Click **Deploy**. Vercel will automatically process SPA rewrites via the included `vercel.json`.
 
@@ -517,7 +517,7 @@ This walkthrough is scripted for live presentations, evaluator assessments, and 
 
 ### Presenter Preparation
 - Open two browser tabs:
-  1. `https://code-a-nova.vercel.app` (Frontend)
+  1. `https://wampire.vercel.app` (Frontend)
   2. Evaluator's email inbox (to demonstrate real-time OTP delivery)
 - Keep Developer Tools open (Network Tab, filter `Fetch/XHR`).
 
@@ -528,7 +528,7 @@ This walkthrough is scripted for live presentations, evaluator assessments, and 
 #### 0:00 – 0:45 | Introduction & Landing Page Experience
 - **Presenter Action:** Land on the Home page (`/`).
 - **Talk Track:**
-  > *"Welcome to CODE-A-NOVA, the modern hackathon operations platform built on React 18, Tailwind CSS, Express, and MongoDB Atlas. Notice the electric blue theme, responsive typography, and clear calls-to-action. Whether on mobile or desktop, the UI provides instant access to event guidelines, track domains, and real-time schedules."*
+  > *"Welcome to WAMPIRE, the modern hackathon operations platform built on React 18, Tailwind CSS, Express, and MongoDB Atlas. Notice the electric blue theme, responsive typography, and clear calls-to-action. Whether on mobile or desktop, the UI provides instant access to event guidelines, track domains, and real-time schedules."*
 - **Action:** Click **"Register Now"** or **"Get Started"** to navigate to `/signup`.
 
 #### 0:45 – 1:45 | Cryptographic Signup & Real-Time OTP Verification
@@ -567,7 +567,7 @@ This walkthrough is scripted for live presentations, evaluator assessments, and 
   > *"The dashboard has dynamically transitioned to 'Registration Confirmed'. Elena's Registration ID, track domain, team roster, and deliverable links are fully persisted in MongoDB Atlas."*
 - **Action:** Click **"Edit Profile"** to showcase password rotation capability, then click **Logout**.
 - **Closing Statement:**
-  > *"With zero vulnerabilities, automated rate limiting, full responsiveness, and 100% test pass rates across all 59 E2E test cases, CODE-A-NOVA is production-ready for deployment. Thank you!"*
+  > *"With zero vulnerabilities, automated rate limiting, full responsiveness, and 100% test pass rates across all 59 E2E test cases, WAMPIRE is production-ready for deployment. Thank you!"*
 
 ---
 
@@ -586,4 +586,4 @@ This walkthrough is scripted for live presentations, evaluator assessments, and 
 ## 📄 License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Developed with ❤️ for the Global Developer Community by the **CODE-A-NOVA Team**.
+Developed with ❤️ for the Global Developer Community by the **WAMPIRE Team**.

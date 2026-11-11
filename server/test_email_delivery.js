@@ -1,10 +1,10 @@
 /**
- * Automated Verification Test Suite for CODE-A-NOVA Nodemailer Email System
+ * Automated Verification Test Suite for WAMPIRE Nodemailer Email System
  *
  * Verifies:
  * 1. Transporter initialization (Gmail SMTP or Ethereal SMTP test fallback)
  * 2. Transporter connection verification
- * 3. Invariant Sender Identity: MUST always be "Code-a-Nova", NEVER a candidate name
+ * 3. Invariant Sender Identity: MUST always be "Wampire", NEVER a candidate name
  * 4. EMAIL 1: OTP Verification email dispatch, HTML structure, 10-min expiry, security notice
  * 5. EMAIL 2: Registration Confirmation email dispatch, team details, registration ID
  * 6. Error handling: invalid recipient, missing parameters
@@ -30,7 +30,7 @@ function assert(condition, message) {
 
 async function runEmailVerificationSuite() {
   console.log('================================================================');
-  console.log('🚀 Starting CODE-A-NOVA Email Delivery Verification Test Suite');
+  console.log('🚀 Starting WAMPIRE Email Delivery Verification Test Suite');
   console.log('================================================================');
   console.log(`Environment: ${config.env}`);
   console.log(`Configured Email From Name: "${config.email.fromName}"`);
@@ -53,8 +53,8 @@ async function runEmailVerificationSuite() {
     console.log('TEST 2: Strict Sender Identity Enforcement');
     const sender = emailService.getSenderAddress();
     assert(
-      sender.startsWith('"Code-a-Nova"'),
-      `Sender name is strictly "Code-a-Nova" (Got: ${sender})`
+      sender.startsWith('"Wampire"'),
+      `Sender name is strictly "Wampire" (Got: ${sender})`
     );
     assert(
       !sender.includes('Elena Rostova') && !sender.includes('Marcus Vance'),
@@ -76,8 +76,8 @@ async function runEmailVerificationSuite() {
 
     assert(otpResult.success === true, 'OTP email dispatch returned success: true');
     assert(Boolean(otpResult.messageId), `OTP email generated valid Message-ID: ${otpResult.messageId}`);
-    assert(otpResult.subject === 'Verify Your Code-a-Nova Account', 'Subject matches exact requirement');
-    assert(otpResult.from.includes('Code-a-Nova'), 'From header reflects Code-a-Nova');
+    assert(otpResult.subject === 'Verify Your Wampire Account', 'Subject matches exact requirement');
+    assert(otpResult.from.includes('Wampire'), 'From header reflects Wampire');
     assert(!otpResult.from.includes(otpCandidate.fullName), 'From header does NOT leak candidate name');
     assert(otpResult.to === otpCandidate.email, `To address matches recipient: ${otpCandidate.email}`);
 
@@ -94,7 +94,7 @@ async function runEmailVerificationSuite() {
       email: 'lead.dev@cyberinnovate.org',
       participantName: 'Marcus Vance',
       registrationId: '65ef3b817c80210b45d29001',
-      eventName: 'CODE-A-NOVA 2026',
+      eventName: 'WAMPIRE 2026',
       collegeName: 'National Institute of Advanced Technology',
       domain: 'Artificial Intelligence & Generative Systems',
       projectName: 'NeuroShield: Real-time Autonomous Threat Defense',
@@ -111,10 +111,10 @@ async function runEmailVerificationSuite() {
     assert(regResult.success === true, 'Registration confirmation email returned success: true');
     assert(Boolean(regResult.messageId), `Registration email generated valid Message-ID: ${regResult.messageId}`);
     assert(
-      regResult.subject === 'Your Code-a-Nova Hackathon Registration is Confirmed!',
+      regResult.subject === 'Your Wampire Hackathon Registration is Confirmed!',
       'Registration subject matches requirement'
     );
-    assert(regResult.from.includes('Code-a-Nova'), 'Sender name remains Code-a-Nova');
+    assert(regResult.from.includes('Wampire'), 'Sender name remains Wampire');
     assert(!regResult.from.includes('Marcus Vance'), 'Sender name does not contain participant name');
     assert(regResult.to === registrationData.email, `Recipient matches team lead: ${registrationData.email}`);
 

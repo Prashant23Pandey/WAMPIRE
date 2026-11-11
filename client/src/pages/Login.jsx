@@ -7,7 +7,7 @@ import Input from '../components/common/Input.jsx';
 import Button from '../components/common/Button.jsx';
 import Alert from '../components/common/Alert.jsx';
 
-const REMEMBERED_EMAIL_KEY = 'code_a_nova_remembered_email';
+const REMEMBERED_EMAIL_KEY = 'wampire_remembered_email';
 
 export const Login = () => {
   const [searchParams] = useSearchParams();
@@ -108,13 +108,13 @@ export const Login = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-200/80 text-violet-700 text-xs font-semibold mb-3">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Participant Portal</span>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF007F]/10 border border-[#FF007F]/30 text-[#FF007F] text-xs font-mono font-bold mb-3">
+          <Sparkles className="w-3.5 h-3.5 text-[#FF007F]" />
+          <span>[ BUILDER ACCESS // PORTAL ]</span>
         </div>
-        <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Participant Sign In</h2>
-        <p className="mt-1 text-xs text-slate-500">
-          Enter your credentials to access your CODE-A-NOVA hackathon dashboard.
+        <h2 className="text-2xl font-serif font-black text-black tracking-tight">Participant Sign In</h2>
+        <p className="mt-1 text-xs text-neutral-600 font-sans">
+          Enter your credentials to access your WAMPIRE hackathon dashboard.
         </p>
       </div>
 
@@ -136,14 +136,14 @@ export const Login = () => {
       )}
 
       {unverifiedEmail && (
-        <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 space-y-2">
-          <p className="font-bold">Your email address has not been verified yet.</p>
-          <p className="text-amber-800">
+        <div className="p-4 rounded-2xl bg-neutral-50 border border-[#FF007F]/40 text-xs text-neutral-800 space-y-2">
+          <p className="font-bold text-black">Your email address has not been verified yet.</p>
+          <p className="text-neutral-600">
             A 6-digit verification code was dispatched to your email. You must verify your account before signing in.
           </p>
           <Link
             to={`/verify-otp?email=${encodeURIComponent(unverifiedEmail)}`}
-            className="inline-flex items-center gap-1.5 text-blue-600 font-bold hover:underline pt-1 cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-[#FF007F] font-bold hover:underline pt-1 cursor-pointer font-mono"
           >
             Enter 6-digit verification code now <ArrowRight className="w-3.5 h-3.5" />
           </Link>
@@ -156,7 +156,7 @@ export const Login = () => {
           label="Email Address"
           type="email"
           name="email"
-          placeholder="hacker@code-a-nova.org"
+          placeholder="hacker@wampire.org"
           value={formData.email}
           onChange={handleChange}
           required
@@ -190,17 +190,17 @@ export const Login = () => {
 
         {/* Remember Email Option */}
         <div className="flex items-center justify-between text-xs pt-1">
-          <label className="flex items-center gap-2 cursor-pointer text-slate-600 font-medium select-none">
+          <label className="flex items-center gap-2 cursor-pointer text-neutral-700 font-mono select-none">
             <input
               type="checkbox"
               checked={rememberEmail}
               onChange={(e) => setRememberEmail(e.target.checked)}
-              className="rounded bg-white border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer w-4 h-4"
+              className="rounded bg-white border-black/20 accent-[#FF007F] cursor-pointer w-4 h-4"
             />
             Remember my email
           </label>
-          <span className="text-slate-400 text-[11px] font-mono">
-            JWT Secured
+          <span className="text-neutral-500 text-[11px] font-mono">
+            JWT SECURED
           </span>
         </div>
 
@@ -209,7 +209,7 @@ export const Login = () => {
           type="submit"
           variant="primary"
           size="lg"
-          className="w-full mt-2"
+          className="w-full mt-2 font-mono text-xs uppercase tracking-wider font-bold shadow-glow-pink"
           isLoading={isLoading}
           disabled={isLoading}
           leftIcon={<LogIn className="w-4 h-4" />}
@@ -218,9 +218,9 @@ export const Login = () => {
         </Button>
       </form>
 
-      <div className="pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
+      <div className="pt-4 border-t border-black/10 text-center text-xs font-mono text-neutral-600">
         Don't have a hackathon account yet?{' '}
-        <Link to="/signup" className="text-blue-600 font-bold hover:underline">
+        <Link to="/signup" className="text-[#FF007F] font-bold hover:underline">
           Create Account
         </Link>
       </div>

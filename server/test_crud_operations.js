@@ -1,5 +1,5 @@
 /**
- * CODE-A-NOVA Comprehensive CRUD & Security Integration Test Suite
+ * WAMPIRE Comprehensive CRUD & Security Integration Test Suite
  * Acts as an automated API Client (like Postman) testing all routes:
  * AUTH, USER, HACKATHON, CONTACT, ADMIN, OWNERSHIP & SECURITY POLICIES.
  */
@@ -14,7 +14,7 @@ import config from './config/env.js';
 import { User, HackathonRegistration, Contact, Admin } from './models/index.js';
 
 console.log('='.repeat(70));
-console.log('       CODE-A-NOVA COMPREHENSIVE CRUD & SECURITY TEST SUITE');
+console.log('       WAMPIRE COMPREHENSIVE CRUD & SECURITY TEST SUITE');
 console.log('='.repeat(70));
 
 let passed = 0;

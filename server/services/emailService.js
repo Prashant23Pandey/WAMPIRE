@@ -4,15 +4,15 @@ import renderOtpVerificationEmail from '../templates/otpVerificationTemplate.js'
 import renderRegistrationConfirmationEmail from '../templates/registrationConfirmationTemplate.js';
 
 /**
- * Enterprise Reusable Email Service for CODE-A-NOVA Hackathon Portal
+ * Enterprise Reusable Email Service for WAMPIRE Hackathon Portal
  *
  * Requirements & Constraints:
  * 1. Gmail SMTP configured strictly via environment variables:
  *    - EMAIL_USER
  *    - EMAIL_PASS
- *    - EMAIL_FROM_NAME (Default: "Code-a-Nova")
+ *    - EMAIL_FROM_NAME (Default: "Wampire")
  * 2. Strict sender identity:
- *    - Sender MUST ALWAYS display "Code-a-Nova" as the sender name.
+ *    - Sender MUST ALWAYS display "Wampire" as the sender name.
  *    - NEVER display a candidate/participant name as the sender.
  * 3. Never expose SMTP credentials or email passwords in logs or errors.
  * 4. Development testing mechanism with verified delivery (Ethereal SMTP / Gmail).
@@ -112,11 +112,11 @@ class EmailService {
 
   /**
    * Build the invariant sender string.
-   * GUARANTEE: Never uses candidate name; ALWAYS displays "Code-a-Nova"
+   * GUARANTEE: Never uses candidate name; ALWAYS displays "Wampire"
    */
   getSenderAddress() {
-    const fromName = config.email.fromName || 'Code-a-Nova';
-    const fromEmail = config.email.user || (this.testAccount ? this.testAccount.user : 'no-reply@code-a-nova.org');
+    const fromName = config.email.fromName || 'Wampire';
+    const fromEmail = config.email.user || (this.testAccount ? this.testAccount.user : 'no-reply@wampire.org');
     return `"${fromName}" <${fromEmail}>`;
   }
 
@@ -195,8 +195,8 @@ class EmailService {
   /**
    * EMAIL 1: OTP VERIFICATION
    * Trigger: User signup or OTP resend.
-   * Sender: Code-a-Nova
-   * Subject: Verify Your Code-a-Nova Account
+   * Sender: Wampire
+   * Subject: Verify Your Wampire Account
    */
   async sendOtpVerificationEmail({ email, fullName, otp }) {
     if (!otp) {
@@ -224,8 +224,8 @@ class EmailService {
   /**
    * EMAIL 2: REGISTRATION CONFIRMATION
    * Trigger: Successful hackathon registration.
-   * Sender: Code-a-Nova
-   * Subject: Your Code-a-Nova Hackathon Registration is Confirmed!
+   * Sender: Wampire
+   * Subject: Your Wampire Hackathon Registration is Confirmed!
    */
   async sendRegistrationConfirmationEmail({
     email,
@@ -236,7 +236,7 @@ class EmailService {
     projectName,
     teamSize = 1,
     teamMembers = [],
-    eventName = 'CODE-A-NOVA 2026',
+    eventName = 'WAMPIRE 2026',
   }) {
     if (!participantName || !collegeName || !domain || !projectName) {
       throw new Error('[EmailService] Missing required registration fields for confirmation email.');

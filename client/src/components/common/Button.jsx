@@ -16,25 +16,25 @@ export const Button = ({
   ...props
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer select-none active:scale-[0.98]';
+    'inline-flex items-center justify-center font-semibold rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer select-none active:scale-[0.98] tracking-wide';
 
   const variants = {
     primary:
-      'bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white shadow-electric hover:shadow-lg focus:ring-blue-500 border border-transparent',
+      'bg-[#FF007F] hover:bg-[#FF2A85] text-white shadow-glow-pink hover:shadow-glow-pink-lg focus:ring-[#FF007F] border border-pink-300/30 font-bold',
     secondary:
-      'bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 hover:border-slate-300 shadow-soft-sm focus:ring-slate-300',
+      'bg-neutral-900/90 hover:bg-neutral-800/90 text-white border border-white/15 hover:border-[#FF007F]/60 backdrop-blur-md focus:ring-neutral-700',
     outline:
-      'bg-transparent hover:bg-blue-50 text-blue-600 hover:text-blue-700 border-2 border-blue-600/80 hover:border-blue-600 focus:ring-blue-400',
+      'bg-transparent hover:bg-[#FF007F]/10 text-[#FF007F] hover:text-pink-300 border border-[#FF007F] focus:ring-[#FF007F]',
     ghost:
-      'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900 focus:ring-slate-200',
+      'bg-transparent hover:bg-white/5 text-neutral-300 hover:text-white focus:ring-neutral-800',
     danger:
       'bg-red-600 hover:bg-red-700 text-white shadow-sm focus:ring-red-400 border border-transparent',
   };
 
   const sizes = {
-    sm: 'text-xs px-3.5 py-2 gap-1.5',
+    sm: 'text-xs px-4 py-2 gap-1.5',
     md: 'text-sm px-5 py-2.5 gap-2',
-    lg: 'text-base px-6 py-3.5 gap-2.5 font-bold',
+    lg: 'text-base px-7 py-3.5 gap-2.5 font-bold',
   };
 
   return (

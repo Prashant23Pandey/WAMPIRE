@@ -3,8 +3,9 @@ import config from './env.js';
 import initializeDatabase from './initDB.js';
 import { setupMockDbEngine, isMockEngineActive } from './mockDbEngine.js';
 
-// Configure fast fail when offline instead of 10s buffering
-mongoose.set('bufferTimeoutMS', 3000);
+// Disable command buffering when disconnected to prevent timeout buffering errors
+mongoose.set('bufferCommands', false);
+mongoose.set('bufferTimeoutMS', 2000);
 
 let isConnected = false;
 
@@ -21,7 +22,7 @@ export const connectDB = async (customUri = null) => {
     const conn = await mongoose.connect(uri, {
       autoIndex: !config.isProduction, // Disable index builds on startup in production for performance
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: config.isProduction ? 5000 : 2000,
       socketTimeoutMS: 45000,
     });
 
@@ -81,7 +82,7 @@ export const getConnectionStatus = () => {
       statusCode: 1,
       isConnected: true,
       host: 'localhost (in-memory mock)',
-      name: 'code_a_nova_mock',
+      name: 'wampire_mock',
     };
   }
 

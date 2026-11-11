@@ -19,7 +19,7 @@ export const apiClient = axios.create({
 // Request Interceptor: Inject JWT token if present
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('code_a_nova_token');
+    const token = localStorage.getItem('wampire_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -40,8 +40,8 @@ apiClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       const isAuthEndpoint = error.config.url.includes('/auth/login') || error.config.url.includes('/auth/register');
       if (!isAuthEndpoint) {
-        localStorage.removeItem('code_a_nova_token');
-        localStorage.removeItem('code_a_nova_user');
+        localStorage.removeItem('wampire_token');
+        localStorage.removeItem('wampire_user');
       }
     }
 

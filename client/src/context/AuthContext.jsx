@@ -6,37 +6,54 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
-      const saved = localStorage.getItem('code_a_nova_user');
+      const saved = localStorage.getItem('wampire_user');
       return saved ? JSON.parse(saved) : null;
     } catch {
-      try { localStorage.removeItem('code_a_nova_user'); } catch {}
+      try { localStorage.removeItem('wampire_user'); } catch {}
       return null;
     }
   });
-  const [token, setToken] = useState(() => localStorage.getItem('code_a_nova_token') || null);
+  const [token, setToken] = useState(() => localStorage.getItem('wampire_token') || null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout();
+    } catch (_) {}
+    setUser(null);
+    setToken(null);
+    try {
+      localStorage.removeItem('wampire_token');
+      localStorage.removeItem('wampire_user');
+    } catch (_) {}
+  }, []);
 
   // Validate session on app initialization
   useEffect(() => {
+    let mounted = true;
+
     const initAuth = async () => {
-      const storedToken = localStorage.getItem('code_a_nova_token');
+      const storedToken = localStorage.getItem('wampire_token');
       if (storedToken) {
         try {
           const response = await authService.getMe();
-          if (response?.data?.user) {
+          if (mounted && response?.data?.user) {
             setUser(response.data.user);
-            localStorage.setItem('code_a_nova_user', JSON.stringify(response.data.user));
+            localStorage.setItem('wampire_user', JSON.stringify(response.data.user));
           }
         } catch (error) {
           console.warn('[Auth] Session validation failed:', error.message);
-          logout();
+          if (mounted) logout();
         }
       }
-      setIsLoading(false);
+      if (mounted) setIsLoading(false);
     };
 
     initAuth();
-  }, []);
+    return () => {
+      mounted = false;
+    };
+  }, [logout]);
 
   const signup = async (formData) => {
     setIsLoading(true);
@@ -87,8 +104,8 @@ export const AuthProvider = ({ children }) => {
       const { user: loggedInUser, token: authToken } = res.data;
       setUser(loggedInUser);
       setToken(authToken);
-      localStorage.setItem('code_a_nova_token', authToken);
-      localStorage.setItem('code_a_nova_user', JSON.stringify(loggedInUser));
+      localStorage.setItem('wampire_token', authToken);
+      localStorage.setItem('wampire_user', JSON.stringify(loggedInUser));
       return { success: true, user: loggedInUser };
     } catch (error) {
       return {
@@ -102,22 +119,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = useCallback(async () => {
-    try {
-      await authService.logout();
-    } catch (_) {}
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem('code_a_nova_token');
-    localStorage.removeItem('code_a_nova_user');
-  }, []);
 
   const updateProfile = async (updates) => {
     try {
       const res = await authService.updateProfile(updates);
       if (res.data?.user) {
         setUser(res.data.user);
-        localStorage.setItem('code_a_nova_user', JSON.stringify(res.data.user));
+        localStorage.setItem('wampire_user', JSON.stringify(res.data.user));
       }
       return { success: true, user: res.data.user };
     } catch (error) {

@@ -43,21 +43,21 @@ export const TopNavbar = ({ user, onToggleSidebar, onLogout }) => {
     : 'H';
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-8 flex items-center justify-between">
+    <header className="sticky top-0 z-30 h-16 bg-white/90 backdrop-blur-xl border-b border-black/10 px-4 sm:px-8 flex items-center justify-between">
       {/* Left: Mobile Menu Toggle & Title */}
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 lg:hidden cursor-pointer"
+          className="p-2 rounded-xl text-neutral-600 hover:text-black hover:bg-neutral-100 lg:hidden cursor-pointer"
           aria-label="Open sidebar menu"
         >
           <Menu className="w-5 h-5" />
         </button>
 
         <div className="hidden sm:block">
-          <p className="text-xs uppercase tracking-widest font-mono text-slate-400 font-bold">
-            Portal Control Center
+          <p className="text-xs uppercase tracking-widest font-mono text-neutral-500 font-bold">
+            [ CONTROL CENTER // ACTIVE ]
           </p>
         </div>
       </div>
@@ -69,19 +69,19 @@ export const TopNavbar = ({ user, onToggleSidebar, onLogout }) => {
           <button
             type="button"
             onClick={() => setShowNotifications((prev) => !prev)}
-            className="relative p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
+            className="relative p-2 rounded-xl text-neutral-600 hover:text-black hover:bg-neutral-100 transition-colors cursor-pointer border border-black/10"
             aria-label="Notifications"
           >
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-blue-600 rounded-full ring-2 ring-white" />
+            <Bell className="w-4 h-4" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-[#FF007F] rounded-full ring-2 ring-white" />
           </button>
 
           {/* Notifications Dropdown */}
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl border border-slate-200 shadow-soft-xl p-3 z-50 animate-in fade-in slide-in-from-top-2">
-              <div className="flex items-center justify-between px-2 py-1.5 border-b border-slate-100 mb-2">
-                <span className="text-xs font-bold text-slate-900">Notifications</span>
-                <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+            <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl border border-black/10 shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2">
+              <div className="flex items-center justify-between px-2 py-1.5 border-b border-black/10 mb-2">
+                <span className="text-xs font-mono font-bold text-black">Notifications</span>
+                <span className="text-[10px] font-mono font-bold text-[#FF007F] bg-[#FF007F]/10 border border-[#FF007F]/30 px-2 py-0.5 rounded-full">
                   2 updates
                 </span>
               </div>
@@ -90,13 +90,13 @@ export const TopNavbar = ({ user, onToggleSidebar, onLogout }) => {
                 {notifications.map((n) => (
                   <div
                     key={n.id}
-                    className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left"
+                    className="p-2.5 rounded-xl hover:bg-neutral-50 transition-colors text-left"
                   >
                     <div className="flex items-center justify-between">
-                      <p className="text-xs font-bold text-slate-800">{n.title}</p>
-                      <span className="text-[10px] text-slate-400 font-mono">{n.time}</span>
+                      <p className="text-xs font-bold text-black">{n.title}</p>
+                      <span className="text-[10px] text-neutral-500 font-mono">{n.time}</span>
                     </div>
-                    <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">{n.desc}</p>
+                    <p className="text-[11px] text-neutral-600 mt-0.5 leading-snug font-sans">{n.desc}</p>
                   </div>
                 ))}
               </div>
@@ -105,17 +105,17 @@ export const TopNavbar = ({ user, onToggleSidebar, onLogout }) => {
         </div>
 
         {/* User Profile Avatar */}
-        <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-violet-600 flex items-center justify-center text-white font-extrabold text-xs shadow-soft-sm">
+        <div className="flex items-center gap-2.5 pl-2 border-l border-black/10">
+          <div className="w-8 h-8 rounded-full bg-[#FF007F]/10 border border-[#FF007F]/30 flex items-center justify-center text-[#FF007F] font-mono font-bold text-xs shadow-sm">
             {initials}
           </div>
           <div className="hidden md:flex flex-col text-left">
-            <span className="text-xs font-bold text-slate-900 leading-tight truncate max-w-[140px]">
+            <span className="text-xs font-mono font-bold text-black leading-tight truncate max-w-[140px]">
               {user?.fullName || 'Participant'}
             </span>
-            <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
+            <span className="text-[10px] text-[#FF007F] font-mono flex items-center gap-1 font-semibold">
               <ShieldCheck className="w-3 h-3" />
-              Verified Hacker
+              Verified Builder
             </span>
           </div>
         </div>
@@ -124,10 +124,10 @@ export const TopNavbar = ({ user, onToggleSidebar, onLogout }) => {
         <button
           type="button"
           onClick={onLogout}
-          title="Sign out of Code-a-Nova"
-          className="p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+          title="Sign out of Wampire"
+          className="p-2 rounded-xl text-neutral-500 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="w-4 h-4" />
         </button>
       </div>
     </header>
@@ -135,4 +135,3 @@ export const TopNavbar = ({ user, onToggleSidebar, onLogout }) => {
 };
 
 export default TopNavbar;
-

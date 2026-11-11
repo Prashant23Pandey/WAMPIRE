@@ -186,215 +186,157 @@ export const HackathonRegisterPage = () => {
     }
   };
 
-  // Update member field
+  // Member field change handler
   const handleMemberChange = (index, field, value) => {
     const updated = [...formData.teamMembers];
     updated[index] = { ...updated[index], [field]: value };
     setFormData((prev) => ({ ...prev, teamMembers: updated }));
 
-    // Clear inline error
-    const key = `member_${index}_${field}`;
-    if (errors[key]) {
-      setErrors((prev) => {
-        const n = { ...prev };
-        delete n[key];
-        return n;
-      });
+    // Clear specific error
+    const errorKey = `member_${index}_${field}`;
+    if (errors[errorKey]) {
+      setErrors((prev) => ({ ...prev, [errorKey]: null }));
     }
   };
 
-  // URL validators
-  const isValidUrl = (url) => {
-    try {
-      new URL(url);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  };
-
-  const isGoogleDriveOrOneDrive = (url) => {
-    if (!isValidUrl(url)) return false;
-    const lower = url.toLowerCase();
-    return (
-      lower.includes('drive.google.com') ||
-      lower.includes('docs.google.com') ||
-      lower.includes('onedrive.live.com') ||
-      lower.includes('1drv.ms') ||
-      lower.includes('sharepoint.com')
-    );
-  };
-
-  const isGitHubFigmaOrDemo = (url) => {
-    if (!isValidUrl(url)) return false;
-    const lower = url.toLowerCase();
-    return (
-      lower.includes('github.com') ||
-      lower.includes('figma.com') ||
-      lower.includes('vercel.app') ||
-      lower.includes('netlify.app') ||
-      lower.includes('render.com') ||
-      lower.includes('herokuapp.com') ||
-      lower.startsWith('http://') ||
-      lower.startsWith('https://')
-    );
-  };
-
-  const isYouTubeOrDrive = (url) => {
-    if (!url) return true; // Optional
-    if (!isValidUrl(url)) return false;
-    const lower = url.toLowerCase();
-    return (
-      lower.includes('youtube.com') ||
-      lower.includes('youtu.be') ||
-      lower.includes('drive.google.com') ||
-      lower.includes('docs.google.com')
-    );
-  };
-
-  // Validate entire form
+  // Field validation logic (14 rules)
   const validateForm = () => {
-    const newErrors = {};
+    const errs = {};
 
-    // 1. Full Name
-    const nameTrim = formData.fullName.trim();
-    if (!nameTrim) {
-      newErrors.fullName = 'Full Name is required.';
-    } else if (nameTrim.length < 3) {
-      newErrors.fullName = 'Full Name must be at least 3 characters.';
-    } else if (!/^[a-zA-Z\s]{3,100}$/.test(nameTrim)) {
-      newErrors.fullName = 'Full Name must contain letters and permitted spaces only.';
+    // 1. Full Name: letters & spaces, min 3 chars
+    const nameRegex = /^[a-zA-Z\s]{3,100}$/;
+    if (!formData.fullName.trim()) {
+      errs.fullName = 'Full Name is required.';
+    } else if (!nameRegex.test(formData.fullName.trim())) {
+      errs.fullName = 'Full Name must contain only letters and spaces (minimum 3 characters).';
     }
 
-    // 2. Email Address
-    const emailTrim = formData.email.trim();
-    if (!emailTrim || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrim)) {
-      newErrors.email = 'A valid email address is required.';
+    // 2. Email: valid email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim()) {
+      errs.email = 'Email Address is required.';
+    } else if (!emailRegex.test(formData.email.trim())) {
+      errs.email = 'Please provide a valid email address.';
     }
 
-    // 3. Mobile Number (Exactly 10 digits Indian mobile)
-    const mobileTrim = formData.mobileNumber.trim();
-    if (!mobileTrim) {
-      newErrors.mobileNumber = 'Mobile Number is required.';
-    } else if (!/^[6-9]\d{9}$/.test(mobileTrim)) {
-      newErrors.mobileNumber = 'Please enter a valid 10-digit Indian mobile number (e.g. 9876543210).';
+    // 3. Mobile Number: Indian 10 digits starting with 6,7,8,9
+    const mobileRegex = /^[6-9]\d{9}$/;
+    if (!formData.mobileNumber.trim()) {
+      errs.mobileNumber = 'Mobile Number is required.';
+    } else if (!mobileRegex.test(formData.mobileNumber.trim())) {
+      errs.mobileNumber = 'Please provide a valid 10-digit Indian mobile number starting with 6-9.';
     }
 
     // 4. College Name
-    if (formData.collegeName === 'Other') {
-      const customCollegeTrim = formData.customCollege.trim();
-      if (!customCollegeTrim) {
-        newErrors.customCollege = 'Please specify your College / University name.';
-      } else if (customCollegeTrim.length < 3) {
-        newErrors.customCollege = 'College name must be at least 3 characters.';
-      }
+    if (!formData.collegeName) {
+      errs.collegeName = 'Please select your college/university.';
+    } else if (formData.collegeName === 'Other' && !formData.customCollege.trim()) {
+      errs.customCollege = 'Please specify your college/university name.';
     }
 
     // 5. Course
-    if (formData.course === 'Other' && !formData.customCourse.trim()) {
-      newErrors.customCourse = 'Please specify your degree / course name.';
+    if (!formData.course) {
+      errs.course = 'Please select your course.';
+    } else if (formData.course === 'Other' && !formData.customCourse.trim()) {
+      errs.customCourse = 'Please specify your course.';
     }
 
     // 6. Branch
-    if (formData.branch === 'Other' && !formData.customBranch.trim()) {
-      newErrors.customBranch = 'Please specify your academic branch / department.';
+    if (!formData.branch) {
+      errs.branch = 'Please select your branch.';
+    } else if (formData.branch === 'Other' && !formData.customBranch.trim()) {
+      errs.customBranch = 'Please specify your branch.';
     }
 
-    // 7. Domain
-    if (formData.domain === 'Other' && !formData.customDomain.trim()) {
-      newErrors.customDomain = 'Please specify your custom domain track.';
+    // 7. Year of Study
+    if (!formData.yearOfStudy) {
+      errs.yearOfStudy = 'Please select your year of study.';
     }
 
-    // 8. Project Name (Minimum 5 characters)
-    const projectTrim = formData.projectName.trim();
-    if (!projectTrim) {
-      newErrors.projectName = 'Project Name is required.';
-    } else if (projectTrim.length < 5) {
-      newErrors.projectName = 'Project Name must be at least 5 characters long.';
+    // 8. Domain
+    if (!formData.domain) {
+      errs.domain = 'Please select a problem domain / track.';
+    } else if (formData.domain === 'Other' && !formData.customDomain.trim()) {
+      errs.customDomain = 'Please specify your custom domain track.';
     }
 
-    // 9. PPT Link (Valid Google Drive or OneDrive URL)
-    const pptTrim = formData.pptLink.trim();
-    if (!pptTrim) {
-      newErrors.pptLink = 'Presentation deck link is required.';
-    } else if (!isGoogleDriveOrOneDrive(pptTrim)) {
-      newErrors.pptLink = 'Must be a valid Google Drive or OneDrive presentation URL.';
+    // 9. Project Name: min 5 chars
+    if (!formData.projectName.trim()) {
+      errs.projectName = 'Project Name is required.';
+    } else if (formData.projectName.trim().length < 5) {
+      errs.projectName = 'Project Name must be at least 5 characters long.';
     }
 
-    // 10. Prototype Link (Valid GitHub, Figma, or live demonstration URL)
-    const protoTrim = formData.prototypeLink.trim();
-    if (!protoTrim) {
-      newErrors.prototypeLink = 'Prototype or repository link is required.';
-    } else if (!isGitHubFigmaOrDemo(protoTrim)) {
-      newErrors.prototypeLink = 'Must be a valid GitHub, Figma, or live demonstration URL.';
+    // 10. PPT Link: valid URL
+    const urlRegex = /^https?:\/\/.+/i;
+    if (!formData.pptLink.trim()) {
+      errs.pptLink = 'Presentation/PPT link is required.';
+    } else if (!urlRegex.test(formData.pptLink.trim())) {
+      errs.pptLink = 'Please enter a valid presentation URL (e.g. Google Drive, OneDrive).';
     }
 
-    // 11. Demo Video (Optional valid YouTube or Drive URL)
-    const videoTrim = formData.demoVideoLink.trim();
-    if (videoTrim && !isYouTubeOrDrive(videoTrim)) {
-      newErrors.demoVideoLink = 'If provided, demo video must be a valid YouTube or Google Drive URL.';
+    // 11. Prototype Link: valid URL
+    if (!formData.prototypeLink.trim()) {
+      errs.prototypeLink = 'Prototype or repository link is required.';
+    } else if (!urlRegex.test(formData.prototypeLink.trim())) {
+      errs.prototypeLink = 'Please enter a valid prototype URL (e.g. GitHub repo, Figma demo).';
     }
 
-    // 12. Additional Team Members Validation
+    // 12. Demo Video Link: optional, but if entered must be valid URL
+    if (formData.demoVideoLink.trim() && !urlRegex.test(formData.demoVideoLink.trim())) {
+      errs.demoVideoLink = 'Please enter a valid video URL (e.g. YouTube, Google Drive).';
+    }
+
+    // 13 & 14. Team Members Validation
     if (formData.teamSize > 1) {
-      const leadEmail = formData.email.trim().toLowerCase();
-      const seenEmails = new Set();
-
       formData.teamMembers.forEach((member, idx) => {
-        const mName = (member.name || '').trim();
-        const mEmail = (member.email || '').trim().toLowerCase();
-
-        if (!mName) {
-          newErrors[`member_${idx}_name`] = `Member #${idx + 2} name is required.`;
-        } else if (mName.length < 3 || !/^[a-zA-Z\s]{3,100}$/.test(mName)) {
-          newErrors[`member_${idx}_name`] = `Member #${idx + 2} name must be at least 3 letters.`;
+        if (!member.name.trim()) {
+          errs[`member_${idx}_name`] = `Member #${idx + 2} name is required.`;
+        } else if (!nameRegex.test(member.name.trim())) {
+          errs[`member_${idx}_name`] = `Member #${idx + 2} name must contain only letters and spaces.`;
         }
 
-        if (!mEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mEmail)) {
-          newErrors[`member_${idx}_email`] = `Member #${idx + 2} email is invalid.`;
-        } else if (mEmail === leadEmail) {
-          newErrors[`member_${idx}_email`] = `Cannot use team leader's email for a squad member.`;
-        } else if (seenEmails.has(mEmail)) {
-          newErrors[`member_${idx}_email`] = `Duplicate email among squad members: ${mEmail}`;
-        } else {
-          seenEmails.add(mEmail);
+        if (!member.email.trim()) {
+          errs[`member_${idx}_email`] = `Member #${idx + 2} email is required.`;
+        } else if (!emailRegex.test(member.email.trim())) {
+          errs[`member_${idx}_email`] = `Member #${idx + 2} email format is invalid.`;
         }
       });
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
-  // Form submission handler
+  // Submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) {
-      toast.error('Please resolve the errors highlighted on the registration form.', 'Validation Error');
+      toast.error('Please fix all form validation errors before submitting.', 'Validation Error');
       return;
     }
 
     setIsSubmitting(true);
 
-    // Resolve College, Course, Branch, and Domain
-    const finalCollege =
+    const resolvedCollege =
       formData.collegeName === 'Other' ? formData.customCollege.trim() : formData.collegeName;
-    const finalCourse =
+    const resolvedCourse =
       formData.course === 'Other' ? formData.customCourse.trim() : formData.course;
-    const finalBranch =
+    const resolvedBranch =
       formData.branch === 'Other' ? formData.customBranch.trim() : formData.branch;
-    const finalDomain =
+    const resolvedDomain =
       formData.domain === 'Other' ? formData.customDomain.trim() : formData.domain;
 
     const payload = {
       fullName: formData.fullName.trim(),
       email: formData.email.trim().toLowerCase(),
       mobileNumber: formData.mobileNumber.trim(),
-      collegeName: finalCollege,
-      course: finalCourse,
-      branch: finalBranch,
+      collegeName: resolvedCollege,
+      course: resolvedCourse,
+      branch: resolvedBranch,
       yearOfStudy: formData.yearOfStudy,
-      domain: finalDomain,
+      domain: resolvedDomain,
       projectName: formData.projectName.trim(),
       pptLink: formData.pptLink.trim(),
       prototypeLink: formData.prototypeLink.trim(),
@@ -414,7 +356,7 @@ export const HackathonRegisterPage = () => {
           registration: res.data.registration,
           registrationId:
             res.data.registrationId ||
-            `CAN-REG-${res.data.registration._id.toString().slice(-8).toUpperCase()}`,
+            `WAM-REG-${res.data.registration._id.toString().slice(-8).toUpperCase()}`,
         });
       }
     } catch (err) {
@@ -437,10 +379,10 @@ export const HackathonRegisterPage = () => {
   // Loading state
   if (authLoading || isCheckingExisting) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+      <div className="min-h-screen flex items-center justify-center bg-white text-black tech-grid-light">
+        <div className="flex flex-col items-center gap-3 font-mono">
+          <div className="w-10 h-10 border-2 border-[#FF007F] border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs font-bold text-neutral-600 uppercase tracking-widest">
             Preparing Registration Module...
           </p>
         </div>
@@ -450,46 +392,46 @@ export const HackathonRegisterPage = () => {
 
   // SCREEN 1: ALREADY REGISTERED NOTICE (Prevents duplicate submissions)
   if (existingRegistration && !submissionSuccess) {
-    const formattedId = `CAN-REG-${existingRegistration._id.toString().slice(-8).toUpperCase()}`;
+    const formattedId = `WAM-REG-${existingRegistration._id.toString().slice(-8).toUpperCase()}`;
 
     return (
-      <div className="min-h-screen bg-[#f8fafc] py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-        <div className="max-w-2xl w-full bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-soft-xl text-center space-y-6">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-soft-sm">
+      <div className="min-h-screen bg-white text-black py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center tech-grid-light">
+        <div className="max-w-2xl w-full bg-white rounded-3xl p-8 sm:p-10 border border-black/10 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.06)] text-center space-y-6">
+          <div className="w-16 h-16 rounded-2xl bg-neutral-100 border border-[#FF007F]/40 text-[#FF007F] flex items-center justify-center mx-auto shadow-sm">
             <CheckCircle2 className="w-8 h-8" />
           </div>
 
           <div>
-            <Badge variant="success" className="mb-2">Already Registered</Badge>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            <Badge variant="pink" size="md" className="mb-2">Already Registered</Badge>
+            <h2 className="text-2xl sm:text-3xl font-serif font-black text-black tracking-tight">
               You Have Already Submitted Your Entry
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-neutral-600 mt-2 max-w-lg mx-auto leading-relaxed font-sans">
               Each authenticated hacker account is permitted exactly one hackathon registration. Your squad entry is locked in under registration ID:
             </p>
-            <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 font-mono font-extrabold text-blue-600 text-sm">
+            <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-neutral-50 border border-[#FF007F]/40 font-mono font-bold text-[#FF007F] text-sm">
               <span>{formattedId}</span>
             </div>
           </div>
 
-          <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 text-left space-y-2 text-xs">
+          <div className="p-5 rounded-2xl bg-neutral-50 border border-black/10 text-left space-y-2 text-xs font-mono">
             <div className="flex justify-between py-1">
-              <span className="text-slate-500">Project Name:</span>
-              <span className="font-bold text-slate-900">{existingRegistration.projectName}</span>
+              <span className="text-neutral-500">Project Name:</span>
+              <span className="font-bold text-black font-sans">{existingRegistration.projectName}</span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-500">Domain Track:</span>
-              <span className="font-bold text-violet-700">{existingRegistration.domain}</span>
+              <span className="text-neutral-500">Domain Track:</span>
+              <span className="font-bold text-[#FF007F]">{existingRegistration.domain}</span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-500">Team Squad:</span>
-              <span className="font-bold text-slate-900">
-                {existingRegistration.teamSize} {existingRegistration.teamSize > 1 ? 'Hackers' : 'Hacker (Solo)'}
+              <span className="text-neutral-500">Team Squad:</span>
+              <span className="font-bold text-black">
+                {existingRegistration.teamSize} {existingRegistration.teamSize > 1 ? 'Builders' : 'Solo Builder'}
               </span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-500">Status:</span>
-              <span className="font-bold uppercase tracking-wider text-emerald-600">
+              <span className="text-neutral-500">Status:</span>
+              <span className="font-bold uppercase tracking-wider text-[#FF007F]">
                 {existingRegistration.registrationStatus}
               </span>
             </div>
@@ -501,6 +443,7 @@ export const HackathonRegisterPage = () => {
               size="md"
               leftIcon={<ArrowLeft className="w-4 h-4" />}
               onClick={() => navigate('/dashboard')}
+              className="font-mono text-xs uppercase tracking-wider font-bold"
             >
               Go to Dashboard
             </Button>
@@ -515,92 +458,92 @@ export const HackathonRegisterPage = () => {
     const { registration: reg, registrationId: regId } = submissionSuccess;
 
     return (
-      <div className="min-h-screen bg-[#f8fafc] py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-        <div className="max-w-3xl w-full bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-soft-xl text-center space-y-8 animate-in fade-in zoom-in-95 duration-300">
+      <div className="min-h-screen bg-white text-black py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center tech-grid-light">
+        <div className="max-w-3xl w-full bg-white rounded-3xl p-8 sm:p-12 border border-black/10 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.06)] text-center space-y-8 animate-in fade-in zoom-in-95 duration-300">
           {/* Confirmed Icon */}
-          <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center mx-auto shadow-soft-lg">
+          <div className="w-20 h-20 rounded-3xl bg-neutral-100 border border-[#FF007F]/40 text-[#FF007F] flex items-center justify-center mx-auto shadow-sm">
             <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
           </div>
 
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF007F]/10 border border-[#FF007F]/30 text-[#FF007F] text-xs font-mono font-bold mb-3 shadow-sm">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Official Confirmation Dispatch</span>
+              <span>[ CONFIRMATION DISPATCH ]</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-3xl sm:text-5xl font-serif font-black text-black tracking-tight">
               Registration Successfully Confirmed!
             </h1>
-            <p className="mt-2 text-xs sm:text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
-              Welcome to <strong>CODE-A-NOVA 2026</strong>. A confirmation email with your project credential details has been dispatched to{' '}
-              <span className="font-bold text-slate-800">{reg.email}</span>.
+            <p className="mt-2 text-xs sm:text-sm text-neutral-600 max-w-lg mx-auto leading-relaxed font-sans">
+              Welcome to <strong>WAMPIRE 2026</strong>. A confirmation email with your project credential details has been dispatched to{' '}
+              <span className="font-bold text-[#FF007F] font-mono">{reg.email}</span>.
             </p>
           </div>
 
           {/* Unique Registration ID Banner */}
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+          <div className="p-5 rounded-2xl bg-neutral-50 border border-black/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 block">
                 Official Registration Credential ID
               </span>
-              <span className="font-mono text-xl font-extrabold text-blue-700">{regId}</span>
+              <span className="font-mono text-xl sm:text-2xl font-black text-[#FF007F]">{regId}</span>
             </div>
 
             <button
               type="button"
               onClick={() => copyToClipboard(regId)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors cursor-pointer shadow-soft-sm"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white border border-black/10 text-xs font-mono font-bold text-black hover:border-[#FF007F] transition-colors cursor-pointer shadow-sm"
             >
-              {copiedId ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+              {copiedId ? <Check className="w-3.5 h-3.5 text-[#FF007F]" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copiedId ? 'Copied' : 'Copy ID'}</span>
             </button>
           </div>
 
           {/* Registration Summary Card */}
-          <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200/80 text-left space-y-4 text-xs">
-            <h3 className="font-bold text-slate-900 uppercase tracking-wider text-xs">
+          <div className="bg-neutral-50 rounded-2xl p-6 border border-black/10 text-left space-y-4 text-xs font-mono">
+            <h3 className="font-bold text-black uppercase tracking-wider text-xs">
               Project & Squad Summary
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <span className="text-slate-400 block text-[11px]">Project Title</span>
-                <span className="font-bold text-slate-900 text-sm">{reg.projectName}</span>
+                <span className="text-neutral-500 block text-[11px]">Project Title</span>
+                <span className="font-serif font-bold text-black text-sm">{reg.projectName}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[11px]">Domain Track</span>
-                <span className="font-bold text-violet-700 text-sm">{reg.domain}</span>
+                <span className="text-neutral-500 block text-[11px]">Domain Track</span>
+                <span className="font-bold text-[#FF007F] text-sm">{reg.domain}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[11px]">Institution</span>
-                <span className="font-bold text-slate-800">{reg.collegeName}</span>
+                <span className="text-neutral-500 block text-[11px]">Institution</span>
+                <span className="font-bold text-neutral-800">{reg.collegeName}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[11px]">Squad Size</span>
-                <span className="font-bold text-slate-800">
-                  {reg.teamSize} {reg.teamSize > 1 ? 'Hackers' : 'Hacker (Solo)'}
+                <span className="text-neutral-500 block text-[11px]">Squad Size</span>
+                <span className="font-bold text-black">
+                  {reg.teamSize} {reg.teamSize > 1 ? 'Builders' : 'Solo Builder'}
                 </span>
               </div>
             </div>
 
             {/* Team Members List */}
             {reg.teamMembers && reg.teamMembers.length > 0 && (
-              <div className="pt-3 border-t border-slate-200">
-                <span className="text-slate-400 block text-[11px] mb-2 font-bold uppercase tracking-wider">
+              <div className="pt-3 border-t border-black/10">
+                <span className="text-neutral-500 block text-[11px] mb-2 font-bold uppercase tracking-wider">
                   Squad Members
                 </span>
                 <div className="space-y-1.5">
-                  <div className="flex justify-between items-center bg-white p-2 rounded-xl border border-slate-200">
-                    <span className="font-bold text-slate-900">{reg.fullName} (Lead)</span>
-                    <span className="font-mono text-slate-500">{reg.email}</span>
+                  <div className="flex justify-between items-center bg-white p-2 rounded-xl border border-black/10">
+                    <span className="font-bold text-black">{reg.fullName} (Lead)</span>
+                    <span className="font-mono text-neutral-600">{reg.email}</span>
                   </div>
                   {reg.teamMembers.map((m, idx) => (
                     <div
                       key={idx}
-                      className="flex justify-between items-center bg-white p-2 rounded-xl border border-slate-200"
+                      className="flex justify-between items-center bg-white p-2 rounded-xl border border-black/10"
                     >
-                      <span className="font-bold text-slate-800">{m.name}</span>
-                      <span className="font-mono text-slate-500">{m.email}</span>
+                      <span className="font-bold text-neutral-800">{m.name}</span>
+                      <span className="font-mono text-neutral-600">{m.email}</span>
                     </div>
                   ))}
                 </div>
@@ -615,6 +558,7 @@ export const HackathonRegisterPage = () => {
               size="lg"
               leftIcon={<Rocket className="w-4 h-4" />}
               onClick={() => navigate('/dashboard')}
+              className="font-mono text-xs uppercase tracking-wider font-bold"
             >
               Go to Participant Dashboard
             </Button>
@@ -626,33 +570,33 @@ export const HackathonRegisterPage = () => {
 
   // SCREEN 3: HACKATHON REGISTRATION FORM
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 py-10 px-4 sm:px-6 lg:px-8 text-left">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen bg-white text-black py-16 px-4 sm:px-6 lg:px-8 text-left tech-grid-light">
+      <div className="max-w-4xl mx-auto space-y-8 pt-8">
         {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-soft-sm"
+            className="inline-flex items-center gap-2 text-xs font-mono font-medium text-neutral-700 hover:text-black transition-all bg-white px-4 py-2 rounded-full border border-black/10 hover:border-[#FF007F] shadow-sm"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
+            <ArrowLeft className="w-3.5 h-3.5 text-[#FF007F]" />
+            <span>Back to Dashboard</span>
           </Link>
-          <div className="inline-flex items-center gap-1 text-xs font-mono font-bold text-slate-400">
-            <span>Portal</span> / <span className="text-blue-600">Registration</span>
+          <div className="inline-flex items-center gap-1 text-xs font-mono font-bold text-neutral-500">
+            <span>Portal</span> / <span className="text-[#FF007F]">Registration</span>
           </div>
         </div>
 
         {/* Header Hero */}
-        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-soft-sm relative overflow-hidden">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-semibold mb-3">
+        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-black/10 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.06)] relative overflow-hidden">
+          <div className="max-w-2xl space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF007F]/10 border border-[#FF007F]/30 text-[#FF007F] text-xs font-mono font-bold shadow-sm">
               <Rocket className="w-3.5 h-3.5" />
-              <span>CODE-A-NOVA 2026</span>
+              <span>[ WAMPIRE 2026 // SPRINT ]</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-serif font-black text-black tracking-tight">
               Official Hackathon Registration Module
             </h1>
-            <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed">
+            <p className="text-xs sm:text-sm text-neutral-600 font-sans leading-relaxed">
               Submit your team credentials, problem track, and prototype links. All details are saved directly in MongoDB and confirmed via automated email dispatch.
             </p>
           </div>
@@ -661,12 +605,12 @@ export const HackathonRegisterPage = () => {
         {/* Main Form */}
         <form onSubmit={handleSubmit} className="space-y-8" noValidate>
           {/* SECTION 1: LEAD PARTICIPANT DETAILS */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-soft-sm space-y-6">
-            <div className="pb-4 border-b border-slate-100 flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-                1
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/10 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.06)] space-y-6">
+            <div className="pb-4 border-b border-black/10 flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-neutral-100 border border-[#FF007F]/40 text-[#FF007F] flex items-center justify-center font-mono font-bold text-xs shadow-sm">
+                01
               </div>
-              <h2 className="text-base font-bold text-slate-900 tracking-tight">
+              <h2 className="text-base font-serif font-bold text-black tracking-tight">
                 Team Leader Personal Credentials
               </h2>
             </div>
@@ -674,11 +618,11 @@ export const HackathonRegisterPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {/* Full Name */}
               <div className="space-y-1">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Full Name <span className="text-blue-600">*</span>
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                  Full Name <span className="text-[#FF007F]">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+                  <div className="absolute left-3.5 text-neutral-400 pointer-events-none">
                     <User className="w-4 h-4" />
                   </div>
                   <input
@@ -689,43 +633,43 @@ export const HackathonRegisterPage = () => {
                       if (errors.fullName) setErrors({ ...errors, fullName: null });
                     }}
                     placeholder="Ada Lovelace"
-                    className={`w-full bg-white text-slate-900 rounded-xl pl-10 pr-4 py-3 text-sm border outline-none shadow-soft-sm transition-all ${
+                    className={`w-full bg-white text-black rounded-xl pl-10 pr-4 py-3 text-sm border outline-none font-sans transition-all ${
                       errors.fullName
-                        ? 'border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-100'
-                        : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-50'
+                        ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20'
+                        : 'border-black/20 hover:border-black/30 focus:border-[#FF007F] focus:ring-2 focus:ring-[#FF007F]/20'
                     }`}
                   />
                 </div>
-                {errors.fullName && <p className="text-xs text-red-600 font-medium mt-1">{errors.fullName}</p>}
-                <p className="text-[11px] text-slate-400">Letters and permitted spaces only, minimum 3 characters</p>
+                {errors.fullName && <p className="text-xs text-red-500 font-medium mt-1">{errors.fullName}</p>}
+                <p className="text-[11px] font-mono text-neutral-500">Letters and permitted spaces only, minimum 3 characters</p>
               </div>
 
               {/* Email Address */}
               <div className="space-y-1">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Email Address <span className="text-blue-600">*</span>
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                  Email Address <span className="text-[#FF007F]">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+                  <div className="absolute left-3.5 text-neutral-400 pointer-events-none">
                     <Mail className="w-4 h-4" />
                   </div>
                   <input
                     type="email"
                     value={formData.email}
                     disabled
-                    className="w-full bg-slate-100 text-slate-500 rounded-xl pl-10 pr-4 py-3 text-sm border border-slate-200 cursor-not-allowed font-mono"
+                    className="w-full bg-neutral-100 text-neutral-600 rounded-xl pl-10 pr-4 py-3 text-sm border border-black/10 cursor-not-allowed font-mono"
                   />
                 </div>
-                <p className="text-[11px] text-slate-400">Pre-filled from your authenticated account</p>
+                <p className="text-[11px] font-mono text-neutral-500">Pre-filled from your authenticated account</p>
               </div>
 
               {/* Mobile Number */}
               <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Mobile Number (India) <span className="text-blue-600">*</span>
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                  Mobile Number (India) <span className="text-[#FF007F]">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+                  <div className="absolute left-3.5 text-neutral-400 pointer-events-none">
                     <Phone className="w-4 h-4" />
                   </div>
                   <input
@@ -738,28 +682,28 @@ export const HackathonRegisterPage = () => {
                       if (errors.mobileNumber) setErrors({ ...errors, mobileNumber: null });
                     }}
                     placeholder="9876543210"
-                    className={`w-full bg-white text-slate-900 rounded-xl pl-10 pr-4 py-3 text-sm border outline-none shadow-soft-sm transition-all ${
+                    className={`w-full bg-white text-black rounded-xl pl-10 pr-4 py-3 text-sm border outline-none font-sans transition-all ${
                       errors.mobileNumber
-                        ? 'border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-100'
-                        : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-50'
+                        ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20'
+                        : 'border-black/20 hover:border-black/30 focus:border-[#FF007F] focus:ring-2 focus:ring-[#FF007F]/20'
                     }`}
                   />
                 </div>
                 {errors.mobileNumber && (
-                  <p className="text-xs text-red-600 font-medium mt-1">{errors.mobileNumber}</p>
+                  <p className="text-xs text-red-500 font-medium mt-1">{errors.mobileNumber}</p>
                 )}
-                <p className="text-[11px] text-slate-400">Exactly 10 digits starting with 6, 7, 8, or 9</p>
+                <p className="text-[11px] font-mono text-neutral-500">Exactly 10 digits starting with 6, 7, 8, or 9</p>
               </div>
             </div>
           </div>
 
           {/* SECTION 2: ACADEMIC INSTITUTION & PROGRAM */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-soft-sm space-y-6">
-            <div className="pb-4 border-b border-slate-100 flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center font-bold">
-                2
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/10 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.06)] space-y-6">
+            <div className="pb-4 border-b border-black/10 flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-neutral-100 border border-[#FF007F]/40 text-[#FF007F] flex items-center justify-center font-mono font-bold text-xs shadow-sm">
+                02
               </div>
-              <h2 className="text-base font-bold text-slate-900 tracking-tight">
+              <h2 className="text-base font-serif font-bold text-black tracking-tight">
                 Academic Institution Details
               </h2>
             </div>
@@ -767,11 +711,11 @@ export const HackathonRegisterPage = () => {
             <div className="space-y-4">
               {/* College Dropdown */}
               <div className="space-y-1">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  College / University <span className="text-blue-600">*</span>
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                  College / University <span className="text-[#FF007F]">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+                  <div className="absolute left-3.5 text-neutral-400 pointer-events-none">
                     <GraduationCap className="w-4 h-4" />
                   </div>
                   <select
@@ -780,10 +724,10 @@ export const HackathonRegisterPage = () => {
                       setFormData({ ...formData, collegeName: e.target.value });
                       if (errors.customCollege) setErrors({ ...errors, customCollege: null });
                     }}
-                    className="w-full bg-white text-slate-900 rounded-xl pl-10 pr-4 py-3 text-sm border border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-50 outline-none shadow-soft-sm"
+                    className="w-full bg-white text-black rounded-xl pl-10 pr-4 py-3 text-sm border border-black/20 hover:border-black/30 focus:border-[#FF007F] focus:ring-2 focus:ring-[#FF007F]/20 outline-none font-sans"
                   >
                     {PREDEFINED_COLLEGES.map((c) => (
-                      <option key={c} value={c}>
+                      <option key={c} value={c} className="bg-white text-black">
                         {c}
                       </option>
                     ))}
@@ -794,8 +738,8 @@ export const HackathonRegisterPage = () => {
               {/* Custom College Input if 'Other' */}
               {formData.collegeName === 'Other' && (
                 <div className="space-y-1 animate-in fade-in slide-in-from-top-1">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Specify College / University Name <span className="text-blue-600">*</span>
+                  <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                    Specify College / University Name <span className="text-[#FF007F]">*</span>
                   </label>
                   <input
                     type="text"
@@ -805,14 +749,14 @@ export const HackathonRegisterPage = () => {
                       if (errors.customCollege) setErrors({ ...errors, customCollege: null });
                     }}
                     placeholder="Enter your university name"
-                    className={`w-full bg-white text-slate-900 rounded-xl px-4 py-3 text-sm border outline-none shadow-soft-sm ${
+                    className={`w-full bg-white text-black rounded-xl px-4 py-3 text-sm border outline-none font-sans ${
                       errors.customCollege
-                        ? 'border-red-400 focus:border-red-500'
-                        : 'border-slate-200 focus:border-blue-600'
+                        ? 'border-red-500 focus:border-red-400'
+                        : 'border-black/20 focus:border-[#FF007F]'
                     }`}
                   />
                   {errors.customCollege && (
-                    <p className="text-xs text-red-600 font-medium mt-1">{errors.customCollege}</p>
+                    <p className="text-xs text-red-500 font-medium mt-1">{errors.customCollege}</p>
                   )}
                 </div>
               )}
@@ -821,16 +765,16 @@ export const HackathonRegisterPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {/* Course */}
                 <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Course <span className="text-blue-600">*</span>
+                  <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                    Course <span className="text-[#FF007F]">*</span>
                   </label>
                   <select
                     value={formData.course}
                     onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-                    className="w-full bg-white text-slate-900 rounded-xl px-4 py-3 text-sm border border-slate-200 outline-none focus:border-blue-600 shadow-soft-sm"
+                    className="w-full bg-white text-black rounded-xl px-4 py-3 text-sm border border-black/20 outline-none focus:border-[#FF007F] font-sans"
                   >
                     {COURSES.map((crs) => (
-                      <option key={crs} value={crs}>
+                      <option key={crs} value={crs} className="bg-white text-black">
                         {crs}
                       </option>
                     ))}
@@ -841,23 +785,23 @@ export const HackathonRegisterPage = () => {
                       placeholder="Specify Course"
                       value={formData.customCourse}
                       onChange={(e) => setFormData({ ...formData, customCourse: e.target.value })}
-                      className="w-full bg-white text-slate-900 rounded-xl px-3 py-2 text-xs border border-slate-200 mt-1"
+                      className="w-full bg-white text-black rounded-xl px-3 py-2 text-xs border border-black/20 mt-1 font-sans"
                     />
                   )}
                 </div>
 
                 {/* Branch */}
                 <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Branch <span className="text-blue-600">*</span>
+                  <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                    Branch <span className="text-[#FF007F]">*</span>
                   </label>
                   <select
                     value={formData.branch}
                     onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
-                    className="w-full bg-white text-slate-900 rounded-xl px-4 py-3 text-sm border border-slate-200 outline-none focus:border-blue-600 shadow-soft-sm"
+                    className="w-full bg-white text-black rounded-xl px-4 py-3 text-sm border border-black/20 outline-none focus:border-[#FF007F] font-sans"
                   >
                     {BRANCHES.map((br) => (
-                      <option key={br} value={br}>
+                      <option key={br} value={br} className="bg-white text-black">
                         {br}
                       </option>
                     ))}
@@ -868,23 +812,23 @@ export const HackathonRegisterPage = () => {
                       placeholder="Specify Branch"
                       value={formData.customBranch}
                       onChange={(e) => setFormData({ ...formData, customBranch: e.target.value })}
-                      className="w-full bg-white text-slate-900 rounded-xl px-3 py-2 text-xs border border-slate-200 mt-1"
+                      className="w-full bg-white text-black rounded-xl px-3 py-2 text-xs border border-black/20 mt-1 font-sans"
                     />
                   )}
                 </div>
 
                 {/* Year of Study */}
                 <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Year of Study <span className="text-blue-600">*</span>
+                  <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                    Year of Study <span className="text-[#FF007F]">*</span>
                   </label>
                   <select
                     value={formData.yearOfStudy}
                     onChange={(e) => setFormData({ ...formData, yearOfStudy: e.target.value })}
-                    className="w-full bg-white text-slate-900 rounded-xl px-4 py-3 text-sm border border-slate-200 outline-none focus:border-blue-600 shadow-soft-sm"
+                    className="w-full bg-white text-black rounded-xl px-4 py-3 text-sm border border-black/20 outline-none focus:border-[#FF007F] font-sans"
                   >
                     {YEARS_OF_STUDY.map((yr) => (
-                      <option key={yr} value={yr}>
+                      <option key={yr} value={yr} className="bg-white text-black">
                         {yr}
                       </option>
                     ))}
@@ -895,12 +839,12 @@ export const HackathonRegisterPage = () => {
           </div>
 
           {/* SECTION 3: DOMAIN TRACK & PROJECT DELIVERABLES */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-soft-sm space-y-6">
-            <div className="pb-4 border-b border-slate-100 flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-                3
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/10 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.06)] space-y-6">
+            <div className="pb-4 border-b border-black/10 flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-neutral-100 border border-[#FF007F]/40 text-[#FF007F] flex items-center justify-center font-mono font-bold text-xs shadow-sm">
+                03
               </div>
-              <h2 className="text-base font-bold text-slate-900 tracking-tight">
+              <h2 className="text-base font-serif font-bold text-black tracking-tight">
                 Domain Track & Project Submission Links
               </h2>
             </div>
@@ -908,20 +852,20 @@ export const HackathonRegisterPage = () => {
             <div className="space-y-4">
               {/* Domain Dropdown */}
               <div className="space-y-1">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Domain / Track <span className="text-blue-600">*</span>
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                  Domain / Track <span className="text-[#FF007F]">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+                  <div className="absolute left-3.5 text-neutral-400 pointer-events-none">
                     <Layers className="w-4 h-4" />
                   </div>
                   <select
                     value={formData.domain}
                     onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
-                    className="w-full bg-white text-slate-900 rounded-xl pl-10 pr-4 py-3 text-sm border border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-50 outline-none shadow-soft-sm"
+                    className="w-full bg-white text-black rounded-xl pl-10 pr-4 py-3 text-sm border border-black/20 hover:border-black/30 focus:border-[#FF007F] focus:ring-2 focus:ring-[#FF007F]/20 outline-none font-sans"
                   >
                     {DOMAINS.map((dom) => (
-                      <option key={dom} value={dom}>
+                      <option key={dom} value={dom} className="bg-white text-black">
                         {dom}
                       </option>
                     ))}
@@ -933,18 +877,18 @@ export const HackathonRegisterPage = () => {
                     placeholder="Specify Custom Domain"
                     value={formData.customDomain}
                     onChange={(e) => setFormData({ ...formData, customDomain: e.target.value })}
-                    className="w-full bg-white text-slate-900 rounded-xl px-4 py-3 text-sm border border-slate-200 mt-2"
+                    className="w-full bg-white text-black rounded-xl px-4 py-3 text-sm border border-black/20 mt-2 font-sans"
                   />
                 )}
               </div>
 
               {/* Project Name (Min 5 chars) */}
               <div className="space-y-1">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Project Name <span className="text-blue-600">*</span>
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                  Project Name <span className="text-[#FF007F]">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+                  <div className="absolute left-3.5 text-neutral-400 pointer-events-none">
                     <FolderGit2 className="w-4 h-4" />
                   </div>
                   <input
@@ -955,26 +899,26 @@ export const HackathonRegisterPage = () => {
                       if (errors.projectName) setErrors({ ...errors, projectName: null });
                     }}
                     placeholder="e.g. NeuroShield: Real-time Autonomous Threat Defense"
-                    className={`w-full bg-white text-slate-900 rounded-xl pl-10 pr-4 py-3 text-sm border outline-none shadow-soft-sm transition-all ${
+                    className={`w-full bg-white text-black rounded-xl pl-10 pr-4 py-3 text-sm border outline-none font-sans transition-all ${
                       errors.projectName
-                        ? 'border-red-400 focus:border-red-500'
-                        : 'border-slate-200 hover:border-slate-300 focus:border-blue-600'
+                        ? 'border-red-500 focus:border-red-400'
+                        : 'border-black/20 hover:border-black/30 focus:border-[#FF007F]'
                     }`}
                   />
                 </div>
                 {errors.projectName && (
-                  <p className="text-xs text-red-600 font-medium mt-1">{errors.projectName}</p>
+                  <p className="text-xs text-red-500 font-medium mt-1">{errors.projectName}</p>
                 )}
-                <p className="text-[11px] text-slate-400">Minimum 5 characters</p>
+                <p className="text-[11px] font-mono text-neutral-500">Minimum 5 characters</p>
               </div>
 
               {/* PPT Link */}
               <div className="space-y-1">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  PPT / Pitch Deck Link <span className="text-blue-600">*</span>
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                  PPT / Pitch Deck Link <span className="text-[#FF007F]">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+                  <div className="absolute left-3.5 text-neutral-400 pointer-events-none">
                     <FileText className="w-4 h-4" />
                   </div>
                   <input
@@ -985,24 +929,24 @@ export const HackathonRegisterPage = () => {
                       if (errors.pptLink) setErrors({ ...errors, pptLink: null });
                     }}
                     placeholder="https://drive.google.com/file/d/..."
-                    className={`w-full bg-white text-slate-900 rounded-xl pl-10 pr-4 py-3 text-sm border outline-none shadow-soft-sm transition-all ${
+                    className={`w-full bg-white text-black rounded-xl pl-10 pr-4 py-3 text-sm border outline-none font-mono transition-all ${
                       errors.pptLink
-                        ? 'border-red-400 focus:border-red-500'
-                        : 'border-slate-200 hover:border-slate-300 focus:border-blue-600'
+                        ? 'border-red-500 focus:border-red-400'
+                        : 'border-black/20 hover:border-black/30 focus:border-[#FF007F]'
                     }`}
                   />
                 </div>
-                {errors.pptLink && <p className="text-xs text-red-600 font-medium mt-1">{errors.pptLink}</p>}
-                <p className="text-[11px] text-slate-400">Valid Google Drive or OneDrive presentation URL</p>
+                {errors.pptLink && <p className="text-xs text-red-500 font-medium mt-1">{errors.pptLink}</p>}
+                <p className="text-[11px] font-mono text-neutral-500">Valid Google Drive or OneDrive presentation URL</p>
               </div>
 
               {/* Prototype Link */}
               <div className="space-y-1">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Prototype Link <span className="text-blue-600">*</span>
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                  Prototype Link <span className="text-[#FF007F]">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+                  <div className="absolute left-3.5 text-neutral-400 pointer-events-none">
                     <ExternalLink className="w-4 h-4" />
                   </div>
                   <input
@@ -1013,26 +957,26 @@ export const HackathonRegisterPage = () => {
                       if (errors.prototypeLink) setErrors({ ...errors, prototypeLink: null });
                     }}
                     placeholder="https://github.com/org/repo or https://figma.com/..."
-                    className={`w-full bg-white text-slate-900 rounded-xl pl-10 pr-4 py-3 text-sm border outline-none shadow-soft-sm transition-all ${
+                    className={`w-full bg-white text-black rounded-xl pl-10 pr-4 py-3 text-sm border outline-none font-mono transition-all ${
                       errors.prototypeLink
-                        ? 'border-red-400 focus:border-red-500'
-                        : 'border-slate-200 hover:border-slate-300 focus:border-blue-600'
+                        ? 'border-red-500 focus:border-red-400'
+                        : 'border-black/20 hover:border-black/30 focus:border-[#FF007F]'
                     }`}
                   />
                 </div>
                 {errors.prototypeLink && (
-                  <p className="text-xs text-red-600 font-medium mt-1">{errors.prototypeLink}</p>
+                  <p className="text-xs text-red-500 font-medium mt-1">{errors.prototypeLink}</p>
                 )}
-                <p className="text-[11px] text-slate-400">Valid GitHub repository, Figma design, or live demo URL</p>
+                <p className="text-[11px] font-mono text-neutral-500">Valid GitHub repository, Figma design, or live demo URL</p>
               </div>
 
               {/* Demo Video Link (Optional) */}
               <div className="space-y-1">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Demo Video Link <span className="text-slate-400 font-normal">(Optional)</span>
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                  Demo Video Link <span className="text-neutral-500 font-normal">(Optional)</span>
                 </label>
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+                  <div className="absolute left-3.5 text-neutral-400 pointer-events-none">
                     <Video className="w-4 h-4" />
                   </div>
                   <input
@@ -1043,33 +987,33 @@ export const HackathonRegisterPage = () => {
                       if (errors.demoVideoLink) setErrors({ ...errors, demoVideoLink: null });
                     }}
                     placeholder="https://youtube.com/watch?v=... or Google Drive URL"
-                    className={`w-full bg-white text-slate-900 rounded-xl pl-10 pr-4 py-3 text-sm border outline-none shadow-soft-sm transition-all ${
+                    className={`w-full bg-white text-black rounded-xl pl-10 pr-4 py-3 text-sm border outline-none font-mono transition-all ${
                       errors.demoVideoLink
-                        ? 'border-red-400 focus:border-red-500'
-                        : 'border-slate-200 hover:border-slate-300 focus:border-blue-600'
+                        ? 'border-red-500 focus:border-red-400'
+                        : 'border-black/20 hover:border-black/30 focus:border-[#FF007F]'
                     }`}
                   />
                 </div>
                 {errors.demoVideoLink && (
-                  <p className="text-xs text-red-600 font-medium mt-1">{errors.demoVideoLink}</p>
+                  <p className="text-xs text-red-500 font-medium mt-1">{errors.demoVideoLink}</p>
                 )}
-                <p className="text-[11px] text-slate-400">Optional valid YouTube or Google Drive walkthrough video</p>
+                <p className="text-[11px] font-mono text-neutral-500">Optional valid YouTube or Google Drive walkthrough video</p>
               </div>
             </div>
           </div>
 
           {/* SECTION 4: DYNAMIC TEAM MANAGEMENT (1 to 5 members) */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-soft-sm space-y-6">
-            <div className="pb-4 border-b border-slate-100 flex items-center justify-between">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/10 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.06)] space-y-6">
+            <div className="pb-4 border-b border-black/10 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center font-bold">
-                  4
+                <div className="w-8 h-8 rounded-full bg-neutral-100 border border-[#FF007F]/40 text-[#FF007F] flex items-center justify-center font-mono font-bold text-xs shadow-sm">
+                  04
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                  <h2 className="text-base font-serif font-bold text-black tracking-tight">
                     Dynamic Team Management
                   </h2>
-                  <p className="text-xs text-slate-400">Supports squad sizes from 1 up to 5 members</p>
+                  <p className="text-xs font-mono text-neutral-500">Supports squad sizes from 1 up to 5 members</p>
                 </div>
               </div>
 
@@ -1077,7 +1021,7 @@ export const HackathonRegisterPage = () => {
                 <button
                   type="button"
                   onClick={handleAddMember}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 border border-[#FF007F]/50 text-[#FF007F] text-xs font-mono font-bold transition-colors cursor-pointer shadow-sm"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add Member</span>
@@ -1087,11 +1031,11 @@ export const HackathonRegisterPage = () => {
 
             {/* Team Size Selector Buttons (1 to 5) */}
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                Selected Squad Size: <span className="text-blue-600">{formData.teamSize} Member{formData.teamSize > 1 ? 's' : ' (Solo)'}</span>
+              <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                Selected Squad Size: <span className="text-[#FF007F]">{formData.teamSize} Member{formData.teamSize > 1 ? 's' : ' (Solo)'}</span>
               </label>
 
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-5 gap-2 font-mono">
                 {[1, 2, 3, 4, 5].map((size) => (
                   <button
                     key={size}
@@ -1099,8 +1043,8 @@ export const HackathonRegisterPage = () => {
                     onClick={() => handleTeamSizeChange(size)}
                     className={`py-3 rounded-2xl text-xs font-bold border transition-all cursor-pointer ${
                       formData.teamSize === size
-                        ? 'bg-gradient-to-r from-blue-600 to-violet-600 text-white border-transparent shadow-soft-md shadow-blue-500/20 scale-[1.02]'
-                        : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                        ? 'bg-[#FF007F] text-white border-[#FF007F] shadow-glow-pink scale-[1.02]'
+                        : 'bg-neutral-50 text-neutral-700 border-black/10 hover:border-black/30 hover:text-black'
                     }`}
                   >
                     {size} {size === 1 ? 'Solo' : 'Hackers'}
@@ -1111,22 +1055,22 @@ export const HackathonRegisterPage = () => {
 
             {/* Dynamic Additional Member Forms */}
             {formData.teamSize === 1 ? (
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-500 text-center">
+              <div className="p-4 rounded-2xl bg-neutral-50 border border-black/10 text-xs font-mono text-neutral-600 text-center">
                 Solo participant entry. You will compete individually without additional team members.
               </div>
             ) : (
               <div className="space-y-4 pt-2">
-                <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <p className="text-xs font-mono font-bold text-black uppercase tracking-wider">
                   Additional Squad Members ({formData.teamMembers.length} of {formData.teamSize - 1})
                 </p>
 
                 {formData.teamMembers.map((member, idx) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3 relative group"
+                    className="p-4 rounded-2xl bg-neutral-50 border border-black/10 space-y-3 relative group"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-blue-700 flex items-center gap-1.5">
+                      <span className="text-xs font-mono font-bold text-[#FF007F] flex items-center gap-1.5">
                         <Users2 className="w-3.5 h-3.5" />
                         Squad Member #{idx + 2}
                       </span>
@@ -1134,7 +1078,7 @@ export const HackathonRegisterPage = () => {
                       <button
                         type="button"
                         onClick={() => handleRemoveMember(idx)}
-                        className="text-slate-400 hover:text-red-600 p-1 rounded-lg transition-colors cursor-pointer"
+                        className="text-neutral-400 hover:text-red-500 p-1 rounded-lg transition-colors cursor-pointer"
                         title="Remove member"
                         aria-label={`Remove Member ${idx + 2}`}
                       >
@@ -1150,14 +1094,14 @@ export const HackathonRegisterPage = () => {
                           placeholder="Member Full Name"
                           value={member.name}
                           onChange={(e) => handleMemberChange(idx, 'name', e.target.value)}
-                          className={`w-full bg-white text-slate-900 rounded-xl px-3.5 py-2.5 text-xs border outline-none shadow-soft-sm ${
+                          className={`w-full bg-white text-black rounded-xl px-3.5 py-2.5 text-xs border outline-none font-sans ${
                             errors[`member_${idx}_name`]
-                              ? 'border-red-400 focus:border-red-500'
-                              : 'border-slate-200 focus:border-blue-600'
+                              ? 'border-red-500 focus:border-red-400'
+                              : 'border-black/20 focus:border-[#FF007F]'
                           }`}
                         />
                         {errors[`member_${idx}_name`] && (
-                          <p className="text-[11px] text-red-600 font-medium">
+                          <p className="text-[11px] text-red-500 font-medium">
                             {errors[`member_${idx}_name`]}
                           </p>
                         )}
@@ -1170,14 +1114,14 @@ export const HackathonRegisterPage = () => {
                           placeholder="Member Email Address"
                           value={member.email}
                           onChange={(e) => handleMemberChange(idx, 'email', e.target.value)}
-                          className={`w-full bg-white text-slate-900 rounded-xl px-3.5 py-2.5 text-xs border outline-none shadow-soft-sm ${
+                          className={`w-full bg-white text-black rounded-xl px-3.5 py-2.5 text-xs border outline-none font-mono ${
                             errors[`member_${idx}_email`]
-                              ? 'border-red-400 focus:border-red-500'
-                              : 'border-slate-200 focus:border-blue-600'
+                              ? 'border-red-500 focus:border-red-400'
+                              : 'border-black/20 focus:border-[#FF007F]'
                           }`}
                         />
                         {errors[`member_${idx}_email`] && (
-                          <p className="text-[11px] text-red-600 font-medium">
+                          <p className="text-[11px] text-red-500 font-medium">
                             {errors[`member_${idx}_email`]}
                           </p>
                         )}
@@ -1190,9 +1134,9 @@ export const HackathonRegisterPage = () => {
           </div>
 
           {/* SUBMIT BUTTON */}
-          <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-soft-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-slate-500">
-              <span className="font-bold text-slate-800 block">Ready to compete?</span>
+          <div className="p-6 bg-white rounded-3xl border border-black/10 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.06)] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs font-mono text-neutral-600">
+              <span className="font-bold text-black block">Ready to compete in the arena?</span>
               Registration triggers confirmation email and locks your participant spot.
             </div>
 
@@ -1204,7 +1148,7 @@ export const HackathonRegisterPage = () => {
               disabled={isSubmitting}
               leftIcon={<Rocket className="w-5 h-5" />}
               rightIcon={<ArrowRight className="w-5 h-5" />}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto font-mono text-xs uppercase tracking-wider font-bold"
             >
               {isSubmitting ? 'Locking in Registration...' : 'Submit Hackathon Registration'}
             </Button>
@@ -1216,4 +1160,3 @@ export const HackathonRegisterPage = () => {
 };
 
 export default HackathonRegisterPage;
-

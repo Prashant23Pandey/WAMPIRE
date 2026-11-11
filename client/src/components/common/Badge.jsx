@@ -10,18 +10,19 @@ export const Badge = ({
   dotColor = '',
 }) => {
   const variants = {
-    primary: 'bg-blue-50 text-blue-700 border-blue-200/80',
-    violet: 'bg-purple-50 text-violet-700 border-violet-200/80',
-    success: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
-    warning: 'bg-amber-50 text-amber-800 border-amber-200/80',
-    danger: 'bg-red-50 text-red-700 border-red-200/80',
-    neutral: 'bg-slate-100 text-slate-700 border-slate-200',
+    primary: 'bg-pink-950/50 text-pink-300 border-pink-500/40 shadow-[0_0_10px_rgba(255,0,127,0.2)]',
+    pink: 'bg-[#FF007F]/20 text-white border-[#FF007F]/50 shadow-[0_0_12px_rgba(255,0,127,0.25)]',
+    violet: 'bg-neutral-900/90 text-pink-300 border-pink-500/30',
+    success: 'bg-neutral-900/90 text-pink-200 border-pink-400/40',
+    warning: 'bg-neutral-900/90 text-white border-pink-500/30',
+    danger: 'bg-red-950/40 text-red-300 border-red-500/40',
+    neutral: 'bg-neutral-900 text-neutral-300 border-white/10',
   };
 
   const sizes = {
     sm: 'text-[10px] px-2.5 py-0.5 font-semibold tracking-wide',
-    md: 'text-xs px-3 py-1 font-semibold tracking-wide',
-    lg: 'text-sm px-4 py-1.5 font-semibold',
+    md: 'text-xs px-3.5 py-1 font-semibold tracking-wider font-mono',
+    lg: 'text-sm px-4 py-1.5 font-semibold font-mono',
   };
 
   return (
@@ -37,7 +38,7 @@ export const Badge = ({
         <span
           className={cn(
             'w-1.5 h-1.5 rounded-full animate-pulse',
-            dotColor || 'bg-current'
+            dotColor || 'bg-[#FF007F]'
           )}
         />
       )}

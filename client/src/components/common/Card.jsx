@@ -11,9 +11,9 @@ export const Card = ({
   return (
     <div
       className={cn(
-        'bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/90 shadow-soft-sm relative overflow-hidden transition-all duration-300',
-        hoverEffect && 'hover:-translate-y-1 hover:border-blue-300/80 hover:shadow-soft-xl',
-        glow && 'border-blue-400 shadow-electric',
+        'bg-[#09090b]/85 rounded-2xl p-6 sm:p-8 border border-white/10 text-white backdrop-blur-xl relative overflow-hidden transition-all duration-300',
+        hoverEffect && 'hover:-translate-y-1 hover:border-[#FF007F]/50 hover:shadow-glow-pink-sm',
+        glow && 'border-[#FF007F] shadow-glow-pink',
         className
       )}
       {...props}
@@ -28,13 +28,13 @@ export const CardHeader = ({ children, className = '' }) => (
 );
 
 export const CardTitle = ({ children, className = '' }) => (
-  <h3 className={cn('text-xl font-bold text-slate-900 tracking-tight', className)}>
+  <h3 className={cn('text-xl font-bold text-white tracking-tight font-display', className)}>
     {children}
   </h3>
 );
 
 export const CardDescription = ({ children, className = '' }) => (
-  <p className={cn('text-sm text-slate-600 leading-relaxed', className)}>{children}</p>
+  <p className={cn('text-sm text-neutral-400 leading-relaxed', className)}>{children}</p>
 );
 
 export const CardContent = ({ children, className = '' }) => (
@@ -42,7 +42,7 @@ export const CardContent = ({ children, className = '' }) => (
 );
 
 export const CardFooter = ({ children, className = '' }) => (
-  <div className={cn('mt-6 pt-5 border-t border-slate-100 flex items-center justify-between', className)}>
+  <div className={cn('mt-6 pt-5 border-t border-white/10 flex items-center justify-between', className)}>
     {children}
   </div>
 );

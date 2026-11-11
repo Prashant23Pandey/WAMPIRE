@@ -66,21 +66,21 @@ export const EditProfileModal = ({ isOpen, onClose, onProfileUpdated }) => {
         />
 
         <div className="text-left space-y-1">
-          <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+          <label className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-700">
             Email Address
           </label>
           <input
             type="email"
             value={user?.email || ''}
             disabled
-            className="w-full bg-slate-100 text-slate-500 rounded-xl px-4 py-2.5 text-sm border border-slate-200 cursor-not-allowed"
+            className="w-full bg-neutral-100 text-neutral-500 rounded-xl px-4 py-2.5 text-sm border border-black/10 cursor-not-allowed font-mono"
           />
-          <p className="text-[11px] text-slate-400">
+          <p className="text-[11px] font-mono text-neutral-500">
             Account email is verified and cannot be changed directly.
           </p>
         </div>
 
-        <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
+        <div className="pt-4 flex justify-end gap-3 border-t border-black/10">
           <Button variant="ghost" size="md" type="button" onClick={onClose}>
             Cancel
           </Button>

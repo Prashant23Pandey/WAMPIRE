@@ -8,7 +8,7 @@ export const getHealth = asyncHandler(async (req, res) => {
 
   const healthData = {
     status: 'online',
-    service: 'CODE-A-NOVA API',
+    service: 'WAMPIRE API',
     version: '1.0.0',
     environment: config.env,
     timestamp: new Date().toISOString(),
@@ -24,7 +24,7 @@ export const getHealth = asyncHandler(async (req, res) => {
 
   return ApiResponse.success(res, {
     statusCode: 200,
-    message: 'CODE-A-NOVA API is running healthy',
+    message: 'WAMPIRE API is running healthy',
     data: healthData,
   });
 });

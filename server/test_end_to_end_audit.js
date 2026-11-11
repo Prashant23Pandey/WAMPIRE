@@ -1,5 +1,5 @@
 /**
- * CODE-A-NOVA MASTER END-TO-END QA & SECURITY AUDIT TEST SUITE
+ * WAMPIRE MASTER END-TO-END QA & SECURITY AUDIT TEST SUITE
  *
  * Audits the application across all 8 specified areas:
  *  - TEST 1: SIGNUP
@@ -26,7 +26,7 @@ import emailService from './services/emailService.js';
 import { generateOTP, hashOTP, verifyOTPHash } from './utils/otpUtils.js';
 
 console.log('='.repeat(80));
-console.log('       CODE-A-NOVA MASTER END-TO-END QA & SECURITY AUDIT SUITE');
+console.log('       WAMPIRE MASTER END-TO-END QA & SECURITY AUDIT SUITE');
 console.log('='.repeat(80));
 
 let passed = 0;
@@ -410,15 +410,15 @@ async function runEndToEndAudit() {
 
       recordTest(
         'test1_signup',
-        Boolean(lastEmail?.from?.includes('Code-a-Nova')),
-        'OTP email sender is strictly "Code-a-Nova" (never exposes participant name as sender)',
+        Boolean(lastEmail?.from?.includes('Wampire')),
+        'OTP email sender is strictly "Wampire" (never exposes participant name as sender)',
         `Sender: ${lastEmail?.from}`
       );
 
       recordTest(
         'test1_signup',
-        Boolean(lastEmail?.subject?.includes('Verify Your Code-a-Nova Account')),
-        'OTP email subject is "Verify Your Code-a-Nova Account"',
+        Boolean(lastEmail?.subject?.includes('Verify Your Wampire Account')),
+        'OTP email subject is "Verify Your Wampire Account"',
         `Subject: ${lastEmail?.subject}`
       );
 
@@ -461,7 +461,7 @@ async function runEndToEndAudit() {
 
       // 2. Enter expired OTP
       // Simulate expired timestamp on a temporary test user
-      const expiredUserEmail = `expired.${Date.now()}@code-a-nova.org`;
+      const expiredUserEmail = `expired.${Date.now()}@wampire.org`;
       const expiredUser = await User.create({
         fullName: 'Expired OTP User',
         email: expiredUserEmail,
@@ -793,14 +793,14 @@ async function runEndToEndAudit() {
       recordTest(
         'test5_registration',
         Boolean(confirmEmail && confirmEmail.subject.includes('Registration is Confirmed')),
-        'Registration confirmation email dispatched with subject "Your Code-a-Nova Hackathon Registration is Confirmed!"',
+        'Registration confirmation email dispatched with subject "Your Wampire Hackathon Registration is Confirmed!"',
         `Subject: ${confirmEmail?.subject}`
       );
 
       recordTest(
         'test5_registration',
-        Boolean(confirmEmail?.from?.includes('Code-a-Nova')),
-        'Confirmation email sender name remains strictly "Code-a-Nova"',
+        Boolean(confirmEmail?.from?.includes('Wampire')),
+        'Confirmation email sender name remains strictly "Wampire"',
         `Sender: ${confirmEmail?.from}`
       );
 

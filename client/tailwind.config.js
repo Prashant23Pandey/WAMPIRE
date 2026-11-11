@@ -4,55 +4,66 @@ export default {
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
+        pure: '#000000',
+        obsidian: {
+          950: '#030304',
+          900: '#070709',
+          850: '#0c0c10',
+          800: '#111116',
+          700: '#1b1b22',
+          600: '#272732',
+        },
         brand: {
-          blue: {
-            50: '#eff6ff',
-            100: '#dbeafe',
-            200: '#bfdbfe',
-            300: '#93c5fd',
-            400: '#60a5fa',
-            500: '#3b82f6',
-            600: '#2563eb', // Electric blue
-            700: '#1d4ed8',
-            800: '#1e40af',
-            900: '#1e3a8a',
-          },
-          violet: {
-            50: '#f5f3ff',
-            100: '#ede9fe',
-            200: '#ddd6fe',
-            300: '#c4b5fd',
-            400: '#a78bfa',
-            500: '#8b5cf6',
-            600: '#7c3aed', // Electric violet
-            700: '#6d28d9',
-            800: '#5b21b6',
-            900: '#4c1d95',
+          pink: {
+            50: '#fff1f6',
+            100: '#ffe4ee',
+            200: '#fecddf',
+            300: '#fea3c5',
+            400: '#fb6fa3',
+            500: '#FF007F', // Neon Cyber Pink
+            600: '#e60072',
+            700: '#c2005e',
+            800: '#9f024e',
+            900: '#830743',
+            950: '#4c0023',
           },
         },
       },
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+        display: ['"Syne"', '"Playfair Display"', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       boxShadow: {
-        'soft-sm': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
-        'soft-md': '0 4px 16px -1px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.04)',
-        'soft-xl': '0 20px 30px -10px rgba(15, 23, 42, 0.07), 0 10px 15px -5px rgba(15, 23, 42, 0.04)',
-        'electric': '0 10px 30px -5px rgba(37, 99, 235, 0.25)',
-        'violet': '0 10px 30px -5px rgba(124, 58, 237, 0.25)',
+        'glow-pink': '0 0 25px -3px rgba(255, 0, 127, 0.45)',
+        'glow-pink-sm': '0 0 15px -2px rgba(255, 0, 127, 0.35)',
+        'glow-pink-lg': '0 0 50px -5px rgba(255, 0, 127, 0.6)',
+        'card-light': '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 0 1px 1px rgba(0, 0, 0, 0.06)',
+        'card-dark': '0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 1px 1px rgba(255, 255, 255, 0.08)',
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'glow-pulse': 'glowPulse 3s ease-in-out infinite',
+        'marquee': 'marquee 28s linear infinite',
       },
       keyframes: {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        glowPulse: {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.85' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
       },
     },

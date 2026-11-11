@@ -187,7 +187,7 @@ export const verifyOtp = asyncHandler(async (req, res, next) => {
 
   return ApiResponse.success(res, {
     statusCode: 200,
-    message: 'Email verified successfully! You may now log in to CODE-A-NOVA.',
+    message: 'Email verified successfully! You may now log in to WAMPIRE.',
     data: {
       email: user.email,
       isVerified: true,

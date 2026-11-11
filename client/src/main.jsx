@@ -21,7 +21,7 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div style={{ padding: '40px', fontFamily: 'sans-serif', textAlign: 'center', background: '#f8fafc', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a', marginBottom: '12px' }}>Code-a-Nova Portal encountered an issue</h1>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a', marginBottom: '12px' }}>Wampire Portal encountered an issue</h1>
           <p style={{ color: '#ef4444', marginBottom: '20px', maxWidth: '600px', wordBreak: 'break-word', background: '#fee2e2', padding: '12px', borderRadius: '8px' }}>
             {this.state.error?.message || 'Unknown runtime error'}
           </p>

@@ -15,7 +15,7 @@
  */
 export const renderRegistrationConfirmationEmail = ({
   participantName,
-  eventName = 'CODE-A-NOVA 2026',
+  eventName = 'WAMPIRE 2026',
   registrationId,
   collegeName,
   domain,
@@ -23,11 +23,11 @@ export const renderRegistrationConfirmationEmail = ({
   teamSize = 1,
   teamMembers = [],
 }) => {
-  const subject = 'Your Code-a-Nova Hackathon Registration is Confirmed!';
+  const subject = 'Your Wampire Hackathon Registration is Confirmed!';
 
   const formattedRegId = registrationId
-    ? `CAN-REG-${registrationId.toString().slice(-8).toUpperCase()}`
-    : 'CAN-REG-PENDING';
+    ? `WAM-REG-${registrationId.toString().slice(-8).toUpperCase()}`
+    : 'WAM-REG-PENDING';
 
   // Format team members table rows
   const memberRows =
@@ -204,7 +204,7 @@ export const renderRegistrationConfirmationEmail = ({
           <tr>
             <td class="logo-badge">C</td>
             <td style="padding-left: 12px;">
-              <h1 class="brand-title">Code-a-Nova</h1>
+              <h1 class="brand-title">Wampire</h1>
               <p class="brand-sub">${eventName}</p>
             </td>
           </tr>
@@ -281,21 +281,21 @@ export const renderRegistrationConfirmationEmail = ({
         <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 18px; margin-bottom: 24px;">
           <div style="font-size: 13px; font-weight: 700; color: #1e40af; margin-bottom: 6px;">Next Steps for Hackers:</div>
           <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #3b82f6; line-height: 1.6;">
-            <li>Access your participant dashboard on the Code-a-Nova Portal.</li>
+            <li>Access your participant dashboard on the Wampire Portal.</li>
             <li>Coordinate with your squad to refine project architecture and tech stacks.</li>
             <li>Check your email for sprint schedules and live evaluation links.</li>
           </ul>
         </div>
 
         <p class="intro-text" style="margin-bottom: 0;">
-          For any updates or team modifications, contact the coordination committee at <a href="mailto:support@code-a-nova.org" style="color: #2563eb; text-decoration: none; font-weight: 600;">support@code-a-nova.org</a>.
+          For any updates or team modifications, contact the coordination committee at <a href="mailto:support@wampire.org" style="color: #2563eb; text-decoration: none; font-weight: 600;">support@wampire.org</a>.
         </p>
       </div>
 
       <!-- Footer -->
       <div class="footer">
         <p class="footer-text">
-          © 2026 Code-a-Nova Organizing Committee. All rights reserved.<br>
+          © 2026 Wampire Organizing Committee. All rights reserved.<br>
           Official confirmation dispatch.
         </p>
       </div>
@@ -307,7 +307,7 @@ export const renderRegistrationConfirmationEmail = ({
   `;
 
   const text = `
-Code-a-Nova - Registration Confirmed
+Wampire - Registration Confirmed
 ====================================
 
 Hello ${participantName},
@@ -329,8 +329,8 @@ ${
 }
 
 Best regards,
-Code-a-Nova Organizing Committee
-support@code-a-nova.org
+Wampire Organizing Committee
+support@wampire.org
   `.trim();
 
   return { subject, html, text };

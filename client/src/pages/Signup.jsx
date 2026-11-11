@@ -148,13 +148,13 @@ export const Signup = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-semibold mb-3">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Hackathon Registration</span>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF007F]/10 border border-[#FF007F]/30 text-[#FF007F] text-xs font-mono font-bold mb-3">
+          <Sparkles className="w-3.5 h-3.5 text-[#FF007F]" />
+          <span>[ STAGE 01 // IDENTITY ]</span>
         </div>
-        <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Create Hacker Account</h2>
-        <p className="mt-1 text-xs text-slate-500">
-          Join CODE-A-NOVA. We'll send a 6-digit OTP to verify your email.
+        <h2 className="text-2xl font-serif font-black text-black tracking-tight">Create Hacker Account</h2>
+        <p className="mt-1 text-xs text-neutral-600 font-sans">
+          Join WAMPIRE. We'll send a 6-digit OTP to verify your email.
         </p>
       </div>
 
@@ -265,9 +265,9 @@ export const Signup = () => {
         </Button>
       </form>
 
-      <div className="pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
+      <div className="pt-4 border-t border-black/10 text-center text-xs font-mono text-neutral-600">
         Already have an account?{' '}
-        <Link to="/login" className="text-blue-600 font-bold hover:underline">
+        <Link to="/login" className="text-[#FF007F] font-bold hover:underline">
           Sign In
         </Link>
       </div>

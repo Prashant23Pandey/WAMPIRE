@@ -24,7 +24,7 @@ function assert(condition, message) {
 }
 
 console.log('================================================================');
-console.log('🚀 Running CODE-A-NOVA Participant Dashboard Verification Suite');
+console.log('🚀 Running WAMPIRE Participant Dashboard Verification Suite');
 console.log('================================================================\n');
 
 // 1. Check all required dashboard components exist

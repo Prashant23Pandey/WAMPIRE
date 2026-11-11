@@ -14,7 +14,7 @@ import {
   AlertTriangle,
   RefreshCw,
   Mail,
-  CheckCircle2,
+  Check,
   Sparkles,
   Award,
   Phone,
@@ -98,8 +98,8 @@ export const DashboardPage = () => {
         setRegistration(regData);
       }
     } catch (err) {
-      console.error('[Dashboard Error]:', err);
-      setApiError('Unable to refresh dashboard data. Please verify your connection.');
+      const msg = err.message || 'Unable to sync dashboard state with server.';
+      setApiError(msg);
     } finally {
       setIsDataLoading(false);
     }
@@ -114,27 +114,26 @@ export const DashboardPage = () => {
   // Handle Logout
   const handleLogout = async () => {
     await logout();
-    toast.info('You have safely signed out of CODE-A-NOVA.', 'Signed Out');
-    navigate('/login');
+    navigate('/');
   };
 
-  // Handle Support message submission
+  // Handle Support Ticket Submit
   const handleSupportSubmit = async (e) => {
     e.preventDefault();
     if (!supportMessage.trim()) return;
 
     setSupportSending(true);
     try {
-      await contactService.submitMessage({
-        name: activeUser?.fullName || 'Hacker',
-        email: activeUser?.email || '',
-        message: supportMessage.trim(),
+      await contactService.submitContact({
+        name: userProfile?.fullName || authUser?.fullName || 'Participant',
+        email: userProfile?.email || authUser?.email,
+        message: `[Dashboard Support Request] ${supportMessage.trim()}`,
       });
       setSupportSuccess(true);
       setSupportMessage('');
-      toast.success('Your support request has been logged. Our mentoring team will reply shortly.');
+      toast.success('Your message has been delivered to hackathon organizers.', 'Support Request Sent');
     } catch (err) {
-      toast.error(err.message || 'Failed to submit support request.');
+      toast.error(err.message || 'Failed to dispatch message.');
     } finally {
       setSupportSending(false);
     }
@@ -142,11 +141,12 @@ export const DashboardPage = () => {
 
   // Handle Withdraw Registration
   const handleConfirmWithdraw = async () => {
-    if (!registration?._id) return;
+    if (!registration) return;
     setIsWithdrawing(true);
+
     try {
-      await hackathonService.deleteRegistration(registration._id);
-      toast.success('Your hackathon registration has been safely withdrawn.', 'Registration Withdrawn');
+      await hackathonService.withdraw();
+      toast.success('Your hackathon registration has been withdrawn.', 'Registration Withdrawn');
       setRegistration(null);
       setIsWithdrawModalOpen(false);
       fetchDashboardData();
@@ -161,10 +161,10 @@ export const DashboardPage = () => {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+      <div className="min-h-screen flex items-center justify-center bg-white text-black tech-grid-light">
+        <div className="flex flex-col items-center gap-3 font-mono">
+          <div className="w-10 h-10 border-2 border-[#FF007F] border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs font-bold text-neutral-600 uppercase tracking-widest">
             Validating Hackathon Session...
           </p>
         </div>
@@ -173,7 +173,7 @@ export const DashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex">
+    <div className="min-h-screen bg-white text-black flex tech-grid-light">
       {/* 1. Sidebar Navigation */}
       <Sidebar
         activeTab={activeTab}
@@ -215,43 +215,44 @@ export const DashboardPage = () => {
               {activeTab === 'overview' && (
                 <div className="space-y-8">
                   {/* WELCOME SECTION */}
-                  <div className="relative rounded-3xl p-6 sm:p-10 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 text-white shadow-soft-xl overflow-hidden text-left">
-                    <div className="absolute -right-12 -top-12 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-                    <div className="relative z-10 max-w-2xl">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-xs font-semibold mb-3 border border-white/20">
+                  <div className="relative rounded-3xl p-6 sm:p-10 bg-white border border-black/10 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.06)] text-black overflow-hidden text-left">
+                    <div className="absolute -right-12 -top-12 w-64 h-64 bg-[#FF007F]/10 rounded-full blur-3xl pointer-events-none" />
+                    <div className="relative z-10 max-w-2xl space-y-4">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF007F]/10 text-xs font-mono font-bold text-[#FF007F] border border-[#FF007F]/30 shadow-sm">
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>Innovate Today. Build Tomorrow.</span>
+                        <span>[ SYSTEM CORE // ACTIVE ]</span>
                       </div>
-                      <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
-                        Welcome back, {activeUser?.fullName || 'Hacker'}!
+                      <h1 className="text-2xl sm:text-4xl font-serif font-black tracking-tight leading-tight text-black">
+                        Welcome back, <span className="text-[#FF007F] italic">{activeUser?.fullName || 'Hacker'}</span>!
                       </h1>
-                      <p className="mt-2 text-xs sm:text-sm text-blue-100 leading-relaxed max-w-xl">
-                        Your participant portal is online. Monitor your hackathon squad, review registered project tracks, and prepare for round 1 evaluation.
+                      <p className="text-xs sm:text-sm text-neutral-600 font-sans leading-relaxed max-w-xl">
+                        Your participant portal is armed. Monitor your hackathon squad, review registered project tracks, and prepare for round 1 evaluation.
                       </p>
 
-                      <div className="mt-6 flex flex-wrap items-center gap-3">
+                      <div className="pt-2 flex flex-wrap items-center gap-3">
                         {!registration ? (
                           <Button
-                            variant="secondary"
+                            variant="primary"
                             size="md"
                             onClick={() => setIsRegisterModalOpen(true)}
-                            leftIcon={<Rocket className="w-4 h-4 text-blue-600" />}
+                            leftIcon={<Rocket className="w-4 h-4" />}
+                            className="font-mono text-xs uppercase tracking-wider font-bold"
                           >
                             Register Squad Now
                           </Button>
                         ) : (
-                          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20 backdrop-blur-md text-xs font-bold border border-white/30">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-50 border border-[#FF007F]/40 text-xs font-mono text-black">
+                            <span className="w-2 h-2 rounded-full bg-[#FF007F] animate-pulse" />
                             <span>Entry Locked: {registration.projectName}</span>
                           </div>
                         )}
                         <button
                           type="button"
                           onClick={fetchDashboardData}
-                          className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
+                          className="p-2.5 rounded-full bg-neutral-100 hover:bg-neutral-200 border border-black/10 transition-colors text-black text-xs font-mono inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
                         >
-                          <RefreshCw className="w-3.5 h-3.5" />
-                          <span>Refresh</span>
+                          <RefreshCw className="w-3.5 h-3.5 text-[#FF007F]" />
+                          <span>Sync Data</span>
                         </button>
                       </div>
                     </div>
@@ -294,10 +295,10 @@ export const DashboardPage = () => {
               {/* TAB 2: MY PROFILE */}
               {activeTab === 'profile' && (
                 <div className="space-y-6 text-left max-w-3xl">
-                  <div className="pb-4 border-b border-slate-200">
-                    <h2 className="text-xl font-black text-slate-900 tracking-tight">Participant Profile</h2>
-                    <p className="text-xs text-slate-500 mt-1">
-                      Manage your official credentials and security settings on CODE-A-NOVA.
+                  <div className="pb-4 border-b border-black/10">
+                    <h2 className="text-xl font-serif font-black text-black tracking-tight">Participant Profile</h2>
+                    <p className="text-xs text-neutral-600 mt-1 font-sans">
+                      Manage your official credentials and security settings on WAMPIRE.
                     </p>
                   </div>
 
@@ -306,23 +307,23 @@ export const DashboardPage = () => {
                     onEditProfile={() => setIsEditProfileOpen(true)}
                   />
 
-                  <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-soft-sm space-y-4">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                      Security & Authentication
+                  <div className="p-6 rounded-3xl bg-white border border-black/10 shadow-sm space-y-4">
+                    <h3 className="text-xs font-mono font-bold text-neutral-500 uppercase tracking-widest">
+                      [ SECURITY & AUTHENTICATION ]
                     </h3>
-                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
+                    <div className="p-4 rounded-2xl bg-neutral-50 border border-black/10 flex items-center justify-between text-xs">
                       <div>
-                        <p className="font-bold text-slate-800">Password Encryption</p>
-                        <p className="text-slate-500">Hashed with bcrypt standard salt rounds</p>
+                        <p className="font-mono font-bold text-black">Password Encryption</p>
+                        <p className="text-neutral-600 font-sans">Hashed with bcrypt standard salt rounds</p>
                       </div>
-                      <Badge variant="success">Secured</Badge>
+                      <Badge variant="pink" size="sm">SECURED</Badge>
                     </div>
-                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
+                    <div className="p-4 rounded-2xl bg-neutral-50 border border-black/10 flex items-center justify-between text-xs">
                       <div>
-                        <p className="font-bold text-slate-800">JWT Token Session</p>
-                        <p className="text-slate-500">Cryptographically signed bearer token</p>
+                        <p className="font-mono font-bold text-black">JWT Token Session</p>
+                        <p className="text-neutral-600 font-sans">Cryptographically signed bearer token</p>
                       </div>
-                      <Badge variant="primary">Active</Badge>
+                      <Badge variant="pink" size="sm">ACTIVE</Badge>
                     </div>
                   </div>
                 </div>
@@ -331,12 +332,12 @@ export const DashboardPage = () => {
               {/* TAB 3: HACKATHON REGISTRATION */}
               {activeTab === 'registration' && (
                 <div className="space-y-6 text-left">
-                  <div className="pb-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                  <div className="pb-4 border-b border-black/10 flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <h2 className="text-xl font-black text-slate-900 tracking-tight">
+                      <h2 className="text-xl font-serif font-black text-black tracking-tight">
                         Hackathon Registration Details
                       </h2>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-neutral-600 mt-1 font-sans">
                         Review your registered entry, college verification, and project domain.
                       </p>
                     </div>
@@ -347,6 +348,7 @@ export const DashboardPage = () => {
                         size="md"
                         onClick={() => navigate('/dashboard/register')}
                         leftIcon={<Rocket className="w-4 h-4" />}
+                        className="text-xs font-mono font-bold uppercase tracking-wider"
                       >
                         Register Entry Now
                       </Button>
@@ -361,36 +363,36 @@ export const DashboardPage = () => {
                   />
 
                   {registration && (
-                    <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-soft-sm space-y-4 text-xs">
-                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                        Academic Institution & Track
+                    <div className="p-6 rounded-3xl bg-white border border-black/10 shadow-sm space-y-4 text-xs">
+                      <h3 className="text-xs font-mono font-bold text-neutral-500 uppercase tracking-widest">
+                        [ ACADEMIC INSTITUTION & TRACK ]
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className="p-3.5 rounded-2xl bg-slate-50">
-                          <span className="text-slate-400 font-bold block mb-1 uppercase tracking-wider text-[10px]">
+                        <div className="p-4 rounded-2xl bg-neutral-50 border border-black/10">
+                          <span className="text-neutral-500 font-mono font-bold block mb-1 uppercase tracking-wider text-[10px]">
                             College Name
                           </span>
-                          <span className="font-extrabold text-slate-900">{registration.collegeName}</span>
+                          <span className="font-serif font-bold text-black">{registration.collegeName}</span>
                         </div>
-                        <div className="p-3.5 rounded-2xl bg-slate-50">
-                          <span className="text-slate-400 font-bold block mb-1 uppercase tracking-wider text-[10px]">
+                        <div className="p-4 rounded-2xl bg-neutral-50 border border-black/10">
+                          <span className="text-neutral-500 font-mono font-bold block mb-1 uppercase tracking-wider text-[10px]">
                             Course & Branch
                           </span>
-                          <span className="font-extrabold text-slate-900">
+                          <span className="font-mono font-bold text-black">
                             {registration.course} - {registration.branch}
                           </span>
                         </div>
-                        <div className="p-3.5 rounded-2xl bg-slate-50">
-                          <span className="text-slate-400 font-bold block mb-1 uppercase tracking-wider text-[10px]">
+                        <div className="p-4 rounded-2xl bg-neutral-50 border border-black/10">
+                          <span className="text-neutral-500 font-mono font-bold block mb-1 uppercase tracking-wider text-[10px]">
                             Year of Study
                           </span>
-                          <span className="font-extrabold text-slate-900">{registration.yearOfStudy}</span>
+                          <span className="font-mono font-bold text-[#FF007F]">{registration.yearOfStudy}</span>
                         </div>
-                        <div className="p-3.5 rounded-2xl bg-slate-50">
-                          <span className="text-slate-400 font-bold block mb-1 uppercase tracking-wider text-[10px]">
+                        <div className="p-4 rounded-2xl bg-neutral-50 border border-black/10">
+                          <span className="text-neutral-500 font-mono font-bold block mb-1 uppercase tracking-wider text-[10px]">
                             Mobile Contact
                           </span>
-                          <span className="font-mono font-extrabold text-slate-900">
+                          <span className="font-mono font-bold text-black">
                             {registration.mobileNumber}
                           </span>
                         </div>
@@ -403,20 +405,20 @@ export const DashboardPage = () => {
               {/* TAB 4: MY TEAM */}
               {activeTab === 'team' && (
                 <div className="space-y-6 text-left">
-                  <div className="pb-4 border-b border-slate-200">
-                    <h2 className="text-xl font-black text-slate-900 tracking-tight">Team Squad</h2>
-                    <p className="text-xs text-slate-500 mt-1">
+                  <div className="pb-4 border-b border-black/10">
+                    <h2 className="text-xl font-serif font-black text-black tracking-tight">Team Squad</h2>
+                    <p className="text-xs text-neutral-600 mt-1 font-sans">
                       Collaborate with your squad members on your hackathon build.
                     </p>
                   </div>
 
                   {!registration ? (
-                    <div className="p-8 rounded-3xl bg-white border border-slate-200 text-center space-y-4">
-                      <div className="w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center mx-auto">
+                    <div className="p-8 rounded-3xl bg-white border border-black/10 shadow-sm text-center space-y-4">
+                      <div className="w-12 h-12 rounded-2xl bg-neutral-100 border border-black/10 text-[#FF007F] flex items-center justify-center mx-auto">
                         <Users2 className="w-6 h-6" />
                       </div>
-                      <h3 className="text-lg font-bold text-slate-900">No Squad Registered Yet</h3>
-                      <p className="text-xs text-slate-500 max-w-md mx-auto">
+                      <h3 className="text-lg font-serif font-bold text-black">No Squad Registered Yet</h3>
+                      <p className="text-xs text-neutral-600 max-w-md mx-auto font-sans">
                         Submit your hackathon registration to invite squad members and assign development tracks.
                       </p>
                       <Button
@@ -424,6 +426,7 @@ export const DashboardPage = () => {
                         size="md"
                         onClick={() => navigate('/dashboard/register')}
                         leftIcon={<Rocket className="w-4 h-4" />}
+                        className="font-mono text-xs uppercase tracking-wider font-bold"
                       >
                         Register Squad
                       </Button>
@@ -431,26 +434,26 @@ export const DashboardPage = () => {
                   ) : (
                     <div className="space-y-4">
                       {/* Team Lead Card */}
-                      <div className="p-5 rounded-3xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 flex items-center justify-between">
+                      <div className="p-5 rounded-3xl bg-white border border-black/10 shadow-sm flex items-center justify-between">
                         <div className="flex items-center gap-3.5">
-                          <div className="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-soft-sm">
+                          <div className="w-11 h-11 rounded-2xl bg-neutral-100 border border-[#FF007F]/40 text-[#FF007F] flex items-center justify-center font-mono font-bold text-sm shadow-sm">
                             {registration.fullName ? registration.fullName.charAt(0) : 'L'}
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-extrabold text-sm text-slate-900">
+                              <span className="font-serif font-bold text-sm text-black">
                                 {registration.fullName}
                               </span>
-                              <Badge variant="primary" size="sm">
+                              <Badge variant="pink" size="sm">
                                 Team Lead
                               </Badge>
                             </div>
-                            <span className="text-xs font-mono text-slate-500">
+                            <span className="text-xs font-mono text-neutral-500">
                               {registration.email}
                             </span>
                           </div>
                         </div>
-                        <span className="text-xs font-bold text-blue-700">Captain</span>
+                        <span className="text-xs font-mono font-bold text-[#FF007F]">CAPTAIN</span>
                       </div>
 
                       {/* Additional Members */}
@@ -459,25 +462,25 @@ export const DashboardPage = () => {
                           {registration.teamMembers.map((member, idx) => (
                             <div
                               key={idx}
-                              className="p-4 rounded-2xl bg-white border border-slate-200 flex items-center justify-between"
+                              className="p-4 rounded-2xl bg-white border border-black/10 shadow-sm flex items-center justify-between"
                             >
                               <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-xl bg-violet-50 text-violet-700 flex items-center justify-center font-bold text-xs">
+                                <div className="w-9 h-9 rounded-xl bg-neutral-100 border border-black/10 text-black flex items-center justify-center font-mono font-bold text-xs">
                                   #{idx + 2}
                                 </div>
                                 <div>
-                                  <p className="font-bold text-xs text-slate-900">{member.name}</p>
-                                  <p className="text-[11px] font-mono text-slate-500">{member.email}</p>
+                                  <p className="font-serif font-bold text-xs text-black">{member.name}</p>
+                                  <p className="text-[11px] font-mono text-neutral-500">{member.email}</p>
                                 </div>
                               </div>
-                              <Badge variant="secondary" size="sm">
-                                {member.role || 'Member'}
+                              <Badge variant="neutral" size="sm">
+                                {member.role || 'Builder'}
                               </Badge>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <div className="p-4 rounded-2xl bg-white border border-slate-200 text-xs text-slate-500 text-center">
+                        <div className="p-4 rounded-2xl bg-neutral-50 border border-black/10 text-xs font-mono text-neutral-600 text-center">
                           Solo hacker entry. No additional squad members registered.
                         </div>
                       )}
@@ -489,26 +492,27 @@ export const DashboardPage = () => {
               {/* TAB 5: MY SUBMISSION */}
               {activeTab === 'submission' && (
                 <div className="space-y-6 text-left">
-                  <div className="pb-4 border-b border-slate-200">
-                    <h2 className="text-xl font-black text-slate-900 tracking-tight">Project Deliverables</h2>
-                    <p className="text-xs text-slate-500 mt-1">
+                  <div className="pb-4 border-b border-black/10">
+                    <h2 className="text-xl font-serif font-black text-black tracking-tight">Project Deliverables</h2>
+                    <p className="text-xs text-neutral-600 mt-1 font-sans">
                       Links for jury evaluation, source repository, and demo media.
                     </p>
                   </div>
 
                   {!registration ? (
-                    <div className="p-8 rounded-3xl bg-white border border-slate-200 text-center space-y-4">
-                      <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
+                    <div className="p-8 rounded-3xl bg-white border border-black/10 shadow-sm text-center space-y-4">
+                      <div className="w-12 h-12 rounded-2xl bg-neutral-100 border border-black/10 text-[#FF007F] flex items-center justify-center mx-auto">
                         <Send className="w-6 h-6" />
                       </div>
-                      <h3 className="text-lg font-bold text-slate-900">Register to Submit Links</h3>
-                      <p className="text-xs text-slate-500 max-w-md mx-auto">
+                      <h3 className="text-lg font-serif font-bold text-black">Register to Submit Links</h3>
+                      <p className="text-xs text-neutral-600 max-w-md mx-auto font-sans">
                         Once registered, you can update your deck, prototype repo, and demo video before final judging.
                       </p>
                       <Button
                         variant="primary"
                         size="md"
                         onClick={() => setIsRegisterModalOpen(true)}
+                        className="font-mono text-xs uppercase tracking-wider font-bold"
                       >
                         Register Project
                       </Button>
@@ -516,8 +520,8 @@ export const DashboardPage = () => {
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {/* Presentation Link */}
-                      <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-soft-sm space-y-3">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                      <div className="p-6 rounded-3xl bg-white border border-black/10 shadow-sm space-y-3">
+                        <span className="text-xs font-mono font-bold text-neutral-500 uppercase tracking-wider block">
                           Slide Deck / Pitch PPT
                         </span>
                         {registration.pptLink ? (
@@ -525,18 +529,18 @@ export const DashboardPage = () => {
                             href={registration.pptLink}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1.5 text-blue-600 font-bold text-sm hover:underline"
+                            className="inline-flex items-center gap-1.5 text-[#FF007F] font-mono font-bold text-xs hover:underline"
                           >
-                            Open Presentation <ExternalLink className="w-4 h-4" />
+                            Open Presentation <ExternalLink className="w-3.5 h-3.5" />
                           </a>
                         ) : (
-                          <p className="text-xs text-slate-400 italic">No link provided</p>
+                          <p className="text-xs text-neutral-500 font-mono italic">No link provided</p>
                         )}
                       </div>
 
                       {/* Prototype Link */}
-                      <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-soft-sm space-y-3">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                      <div className="p-6 rounded-3xl bg-white border border-black/10 shadow-sm space-y-3">
+                        <span className="text-xs font-mono font-bold text-neutral-500 uppercase tracking-wider block">
                           GitHub / Live Prototype
                         </span>
                         {registration.prototypeLink ? (
@@ -544,18 +548,18 @@ export const DashboardPage = () => {
                             href={registration.prototypeLink}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1.5 text-blue-600 font-bold text-sm hover:underline"
+                            className="inline-flex items-center gap-1.5 text-[#FF007F] font-mono font-bold text-xs hover:underline"
                           >
-                            Launch Prototype <ExternalLink className="w-4 h-4" />
+                            Launch Prototype <ExternalLink className="w-3.5 h-3.5" />
                           </a>
                         ) : (
-                          <p className="text-xs text-slate-400 italic">No link provided</p>
+                          <p className="text-xs text-neutral-500 font-mono italic">No link provided</p>
                         )}
                       </div>
 
                       {/* Demo Video */}
-                      <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-soft-sm space-y-3">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                      <div className="p-6 rounded-3xl bg-white border border-black/10 shadow-sm space-y-3">
+                        <span className="text-xs font-mono font-bold text-neutral-500 uppercase tracking-wider block">
                           Demo Walkthrough Video
                         </span>
                         {registration.demoVideoLink ? (
@@ -563,12 +567,12 @@ export const DashboardPage = () => {
                             href={registration.demoVideoLink}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1.5 text-blue-600 font-bold text-sm hover:underline"
+                            className="inline-flex items-center gap-1.5 text-[#FF007F] font-mono font-bold text-xs hover:underline"
                           >
-                            Watch Video <ExternalLink className="w-4 h-4" />
+                            Watch Video <ExternalLink className="w-3.5 h-3.5" />
                           </a>
                         ) : (
-                          <p className="text-xs text-slate-400 italic">No link provided</p>
+                          <p className="text-xs text-neutral-500 font-mono italic">No link provided</p>
                         )}
                       </div>
                     </div>
@@ -579,9 +583,9 @@ export const DashboardPage = () => {
               {/* TAB 6: HELP & SUPPORT */}
               {activeTab === 'support' && (
                 <div className="space-y-6 text-left max-w-3xl">
-                  <div className="pb-4 border-b border-slate-200">
-                    <h2 className="text-xl font-black text-slate-900 tracking-tight">Participant Support</h2>
-                    <p className="text-xs text-slate-500 mt-1">
+                  <div className="pb-4 border-b border-black/10">
+                    <h2 className="text-xl font-serif font-black text-black tracking-tight">Participant Support</h2>
+                    <p className="text-xs text-neutral-600 mt-1 font-sans">
                       Have a query regarding submissions, mentors, or event guidelines? Reach out directly.
                     </p>
                   </div>
@@ -590,15 +594,15 @@ export const DashboardPage = () => {
                     <Alert
                       type="success"
                       title="Message Received"
-                      message="Thank you! The Code-a-Nova coordination committee will review your query and respond shortly."
+                      message="Thank you! The WAMPIRE coordination committee will review your query and respond shortly."
                       onClose={() => setSupportSuccess(false)}
                     />
                   )}
 
-                  <form onSubmit={handleSupportSubmit} className="p-6 rounded-3xl bg-white border border-slate-200 shadow-soft-sm space-y-4">
+                  <form onSubmit={handleSupportSubmit} className="p-6 rounded-3xl bg-white border border-black/10 shadow-sm space-y-4">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                        How can we help you? <span className="text-blue-600">*</span>
+                      <label className="text-xs font-mono font-bold uppercase tracking-wider text-black">
+                        How can we help you? <span className="text-[#FF007F]">*</span>
                       </label>
                       <textarea
                         rows={4}
@@ -606,7 +610,7 @@ export const DashboardPage = () => {
                         onChange={(e) => setSupportMessage(e.target.value)}
                         placeholder="Describe your technical query or mentor request..."
                         required
-                        className="w-full bg-white text-slate-900 placeholder-slate-400 rounded-xl p-3.5 text-sm border border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-50 outline-none transition-all"
+                        className="w-full bg-neutral-50 text-black placeholder-neutral-400 rounded-xl p-3.5 text-sm border border-black/20 hover:border-black/30 focus:border-[#FF007F] focus:ring-2 focus:ring-[#FF007F]/20 outline-none font-sans"
                       />
                     </div>
 
@@ -617,6 +621,7 @@ export const DashboardPage = () => {
                         size="md"
                         isLoading={supportSending}
                         leftIcon={<HelpCircle className="w-4 h-4" />}
+                        className="font-mono text-xs uppercase tracking-wider font-bold"
                       >
                         Submit Support Query
                       </Button>
@@ -651,23 +656,23 @@ export const DashboardPage = () => {
         maxWidth="max-w-md"
       >
         <div className="p-6 space-y-4 text-left">
-          <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
-            <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
+          <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-xs font-sans">
+            <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
             <p>
-              Are you sure you want to withdraw your registration for <strong className="text-white font-bold">{registration?.projectName || 'this project'}</strong>? This action cannot be undone.
+              Are you sure you want to withdraw your registration for <strong className="text-black font-bold">{registration?.projectName || 'this project'}</strong>? This action cannot be undone.
             </p>
           </div>
 
-          <p className="text-xs text-slate-300 leading-relaxed">
-            Withdrawing your entry will relinquish your Registration ID (<span className="font-mono text-blue-400 font-bold">{registration?._id ? `CAN-REG-${registration._id.slice(-8).toUpperCase()}` : ''}</span>) and remove your squad roster from evaluation round 1.
+          <p className="text-xs text-neutral-600 font-sans leading-relaxed">
+            Withdrawing your entry will relinquish your Registration ID (<span className="font-mono text-[#FF007F] font-bold">{registration?._id ? `WAM-REG-${registration._id.slice(-8).toUpperCase()}` : ''}</span>) and remove your squad roster from evaluation round 1.
           </p>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-black/10 font-mono">
             <button
               type="button"
               disabled={isWithdrawing}
               onClick={() => setIsWithdrawModalOpen(false)}
-              className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
+              className="px-4 py-2 text-xs font-bold text-neutral-600 hover:text-black rounded-xl hover:bg-neutral-100 transition-colors cursor-pointer"
             >
               Keep Registration
             </button>
@@ -677,6 +682,7 @@ export const DashboardPage = () => {
               isLoading={isWithdrawing}
               onClick={handleConfirmWithdraw}
               leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+              className="text-xs uppercase tracking-wider font-bold"
             >
               Withdraw Entry
             </Button>

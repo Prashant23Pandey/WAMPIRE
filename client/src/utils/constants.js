@@ -1,60 +1,66 @@
-// Constants for CODE-A-NOVA Hackathon Portal
+// Constants for WAMPIRE Hackathon Portal
 
 export const EVENT_DETAILS = {
-  name: 'CODE-A-NOVA',
+  name: 'WAMPIRE',
   tagline: 'INNOVATE TODAY. BUILD TOMORROW.',
   subtitle: 'Where bold ideas meet brilliant minds. Build, collaborate and create solutions that matter.',
-  contactEmail: 'contact@code-a-nova.org',
-  supportEmail: 'support@code-a-nova.org',
+  contactEmail: 'contact@wampire.org',
+  supportEmail: 'support@wampire.org',
 };
 
-// Configurable Prize Structure
+// Configurable Prize Structure - Strictly Pink, Black, and White Palette
 export const PRIZE_TIERS = [
   {
     rank: 'First Prize',
     title: 'Grand Champion',
-    reward: 'Configurable First Prize',
+    reward: '₹75,000 INR Bounty',
     subtitle: 'Awarded to the most impactful, technically sound, and innovative solution overall.',
-    badge: '1st Place',
-    color: 'from-amber-400 to-amber-600',
-    borderColor: 'border-amber-300',
+    badge: 'GRAND CHAMPION // 01',
+    color: 'from-[#FF007F] to-[#FF2A85]',
+    borderColor: 'border-[#FF007F]',
+    accentColor: 'text-[#FF007F]',
+    bgGlow: 'shadow-glow-pink',
     perks: [
-      'Top-tier grant award',
+      'Top-tier grant bounty & capital pool',
       'Exclusive incubation & venture mentorship',
       'Direct sponsor interview tracks',
-      'Custom championship trophy & certificates',
+      'Custom championship trophy & credentials',
     ],
     highlight: true,
   },
   {
     rank: 'Second Prize',
-    title: 'First Runner-Up',
-    reward: 'Configurable Second Prize',
+    title: '1st Runner-Up',
+    reward: '₹45,000 INR Bounty',
     subtitle: 'Honoring exceptional engineering rigor, design elegance, and market viability.',
-    badge: '2nd Place',
-    color: 'from-slate-400 to-slate-600',
-    borderColor: 'border-slate-300',
+    badge: '1ST RUNNER-UP // 02',
+    color: 'from-white to-neutral-400',
+    borderColor: 'border-white/30',
+    accentColor: 'text-white',
+    bgGlow: 'shadow-card-dark',
     perks: [
-      'Substantial grant award',
-      'One-on-one pitch coaching sessions',
-      'Partner API credits & cloud credits',
+      'Substantial grant bounty allocation',
+      'One-on-one architectural coaching sessions',
+      'Partner API credits & cloud infra credits',
       'Runner-up awards & verified credentials',
     ],
     highlight: false,
   },
   {
     rank: 'Third Prize',
-    title: 'Second Runner-Up',
-    reward: 'Configurable Third Prize',
+    title: '2nd Runner-Up',
+    reward: '₹30,000 INR Bounty',
     subtitle: 'Recognizing outstanding creativity, rapid prototyping, and collaborative excellence.',
-    badge: '3rd Place',
-    color: 'from-amber-700 to-orange-800',
-    borderColor: 'border-amber-200',
+    badge: '2ND RUNNER-UP // 03',
+    color: 'from-pink-400 to-neutral-400',
+    borderColor: 'border-pink-500/30',
+    accentColor: 'text-pink-300',
+    bgGlow: 'shadow-card-dark',
     perks: [
-      'Grant award allocation',
+      'Grant bounty allocation',
       'Technical mentorship network access',
-      'Developer tool licenses & swag kit',
-      'Certificate of excellence',
+      'Developer tool licenses & builder swag kit',
+      'Certificate of technical distinction',
     ],
     highlight: false,
   },
@@ -92,7 +98,7 @@ export const EVENT_HIGHLIGHTS = [
   },
 ];
 
-// Hackathon Timeline
+// Hackathon Timeline (Dynamic 5-Phase Progression + Results)
 export const TIMELINE_STEPS = [
   {
     step: '01',
@@ -104,7 +110,7 @@ export const TIMELINE_STEPS = [
     step: '02',
     title: 'Team Formation',
     phase: 'Phase 2',
-    description: 'Form a squad with teammates or connect with complementary talent through the matchmaking gateway.',
+    description: 'Form a squad with teammates (1-5 members) or connect through the matchmaking gateway.',
   },
   {
     step: '03',
@@ -116,7 +122,7 @@ export const TIMELINE_STEPS = [
     step: '04',
     title: 'Development',
     phase: 'Phase 4',
-    description: 'Intense building sprint: write code, engineer systems, debug collaboratively, and consult with mentors.',
+    description: 'Intense 48-hour sprint: write code, engineer systems, debug collaboratively, and consult with mentors.',
   },
   {
     step: '05',
@@ -135,9 +141,9 @@ export const TIMELINE_STEPS = [
 // About Initiative Pillars
 export const ABOUT_PILLARS = [
   {
-    title: 'Why Code-a-Nova?',
+    title: 'Why Wampire?',
     description:
-      'Code-a-Nova was conceived to bridge the gap between theoretical computing and hands-on production engineering. We cultivate an environment where builders test hypotheses, ship code, and learn by shipping.',
+      'Wampire was conceived to bridge the gap between theoretical computing and hands-on production engineering. We cultivate an environment where builders test hypotheses, ship code, and learn by shipping.',
   },
   {
     title: 'Open Collaborative Culture',
@@ -147,6 +153,6 @@ export const ABOUT_PILLARS = [
   {
     title: 'Focus on Real Impact',
     description:
-      'Rather than isolated toys, Code-a-Nova challenges participants to engineer scalable solutions capable of answering real-world problems with practical, sustainable software.',
+      'Rather than isolated toys, Wampire challenges participants to engineer scalable solutions capable of answering real-world problems with practical, sustainable software.',
   },
 ];

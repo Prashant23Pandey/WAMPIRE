@@ -1,7 +1,7 @@
 {
-  "name": "code-a-nova-portal",
+  "name": "wampire-portal",
   "version": "1.0.0",
-  "description": "CODE-A-NOVA Hackathon Registration Portal (MERN Stack)",
+  "description": "WAMPIRE Hackathon Registration Portal (MERN Stack)",
   "private": true,
   "scripts": {
     "build": "npm --prefix client run build",
@@ -22,11 +22,11 @@
     "mern",
     "hackathon",
     "portal",
-    "code-a-nova",
+    "wampire",
     "react",
     "express",
     "mongodb"
   ],
-  "author": "CODE-A-NOVA Architecture Team",
+  "author": "WAMPIRE Architecture Team",
   "license": "ISC"
 }

@@ -1,5 +1,5 @@
 /**
- * CODE-A-NOVA Contact Page & UI Polish Test Suite
+ * WAMPIRE Contact Page & UI Polish Test Suite
  * Verifies Contact Page, Form Validations, Social Links, Email Displays,
  * Responsive Layouts, App Routing, and Backend Service Integration.
  */
@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 console.log('----------------------------------------------------');
-console.log('🚀 Running CODE-A-NOVA Contact Page & UI Polish Tests');
+console.log('🚀 Running WAMPIRE Contact Page & UI Polish Tests');
 console.log('----------------------------------------------------');
 
 let passedAssertions = 0;

@@ -1,8 +1,8 @@
 {
   "info": {
-    "name": "CODE-A-NOVA Hackathon API Collection",
+    "name": "WAMPIRE Hackathon API Collection",
     "_postman_id": "c0de-a-n0va-api-v1-collection",
-    "description": "Comprehensive Postman Collection for CODE-A-NOVA Hackathon Registration Portal. Covers AUTH, USER, HACKATHON, CONTACT, and ADMIN CRUD endpoints.",
+    "description": "Comprehensive Postman Collection for WAMPIRE Hackathon Registration Portal. Covers AUTH, USER, HACKATHON, CONTACT, and ADMIN CRUD endpoints.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [

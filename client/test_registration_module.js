@@ -1,5 +1,5 @@
 /**
- * CODE-A-NOVA Hackathon Registration Module Test Suite
+ * WAMPIRE Hackathon Registration Module Test Suite
  * Verifies Frontend Registration Page, Field Validations, Dynamic Team Sizing,
  * App Routing, and Backend Service Integration.
  */
@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 console.log('----------------------------------------------------');
-console.log('🚀 Running CODE-A-NOVA Registration Module Tests');
+console.log('🚀 Running WAMPIRE Registration Module Tests');
 console.log('----------------------------------------------------');
 
 let passedAssertions = 0;
@@ -317,14 +317,14 @@ test('hackathonService.js provides register and getMyEntry methods', () => {
   assert.ok(serviceContent.includes('/hackathon/my-entry'), 'getMyEntry() must target /hackathon/my-entry');
 });
 
-// 14. Verify Confirmation Screen and Unique Registration ID Format (CAN-REG-XXXXXXXX)
-test('HackathonRegisterPage formats registration ID as CAN-REG-XXXXXXXX', () => {
+// 14. Verify Confirmation Screen and Unique Registration ID Format (WAM-REG-XXXXXXXX)
+test('HackathonRegisterPage formats registration ID as WAM-REG-XXXXXXXX', () => {
   const regPagePath = path.join(__dirname, 'src', 'pages', 'HackathonRegisterPage.jsx');
   const regPageContent = fs.readFileSync(regPagePath, 'utf8');
 
   assert.ok(
-    regPageContent.includes('CAN-REG-'),
-    'HackathonRegisterPage must format ID with CAN-REG- prefix'
+    regPageContent.includes('WAM-REG-'),
+    'HackathonRegisterPage must format ID with WAM-REG- prefix'
   );
   assert.ok(
     regPageContent.includes('Registration Successfully Confirmed!'),

@@ -185,7 +185,7 @@ export const createRegistration = asyncHandler(async (req, res, next) => {
     emailDispatched = false;
   }
 
-  const formattedRegistrationId = `CAN-REG-${registration._id.toString().slice(-8).toUpperCase()}`;
+  const formattedRegistrationId = `WAM-REG-${registration._id.toString().slice(-8).toUpperCase()}`;
 
   return ApiResponse.success(res, {
     statusCode: 201,

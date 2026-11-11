@@ -2,14 +2,14 @@
  * EMAIL 1: OTP VERIFICATION TEMPLATE
  *
  * Requirements:
- * - Code-a-Nova branding
+ * - Wampire branding
  * - Six-digit OTP in high-contrast monospace container
  * - 10-minute expiry notice
  * - Security warning (never share code)
  * - Professional responsive HTML styling
  */
 export const renderOtpVerificationEmail = ({ fullName, otp }) => {
-  const subject = 'Verify Your Code-a-Nova Account';
+  const subject = 'Verify Your Wampire Account';
 
   const html = `
 <!DOCTYPE html>
@@ -169,7 +169,7 @@ export const renderOtpVerificationEmail = ({ fullName, otp }) => {
           <tr>
             <td class="logo-badge">C</td>
             <td style="padding-left: 12px;">
-              <h1 class="brand-title">Code-a-Nova</h1>
+              <h1 class="brand-title">Wampire</h1>
               <p class="brand-sub">Hackathon Portal</p>
             </td>
           </tr>
@@ -180,7 +180,7 @@ export const renderOtpVerificationEmail = ({ fullName, otp }) => {
       <div class="content">
         <h2 class="greeting">Hello, ${fullName || 'Hacker'}!</h2>
         <p class="intro-text">
-          Thank you for joining the <strong>CODE-A-NOVA</strong> technology community. To complete your account registration or verification, please enter the six-digit verification code below:
+          Thank you for joining the <strong>WAMPIRE</strong> technology community. To complete your account registration or verification, please enter the six-digit verification code below:
         </p>
 
         <!-- OTP Display Box -->
@@ -194,19 +194,19 @@ export const renderOtpVerificationEmail = ({ fullName, otp }) => {
         <div class="warning-box">
           <div class="warning-title">⚠️ Security Notice</div>
           <p class="warning-desc">
-            Never share this verification code with anyone. Representatives of Code-a-Nova will never ask for your password or OTP. If you did not initiate this request, you can safely disregard this email.
+            Never share this verification code with anyone. Representatives of Wampire will never ask for your password or OTP. If you did not initiate this request, you can safely disregard this email.
           </p>
         </div>
 
         <p class="intro-text" style="margin-bottom: 0;">
-          Need assistance? Feel free to reach out to our team at <a href="mailto:contact@code-a-nova.org" style="color: #2563eb; text-decoration: none; font-weight: 600;">contact@code-a-nova.org</a>.
+          Need assistance? Feel free to reach out to our team at <a href="mailto:contact@wampire.org" style="color: #2563eb; text-decoration: none; font-weight: 600;">contact@wampire.org</a>.
         </p>
       </div>
 
       <!-- Footer -->
       <div class="footer">
         <p class="footer-text">
-          © 2026 Code-a-Nova Hackathon Committee. All rights reserved.<br>
+          © 2026 Wampire Hackathon Committee. All rights reserved.<br>
           Automated security dispatch. Please do not reply directly to this email.
         </p>
       </div>
@@ -218,22 +218,22 @@ export const renderOtpVerificationEmail = ({ fullName, otp }) => {
   `;
 
   const text = `
-Code-a-Nova - Email Verification
+Wampire - Email Verification
 ================================
 
 Hello ${fullName || 'Hacker'},
 
-Your Code-a-Nova verification code is: ${otp}
+Your Wampire verification code is: ${otp}
 
 This code will expire in exactly 10 minutes.
 
 SECURITY NOTICE:
-Never share this OTP with anyone. The Code-a-Nova team will never ask for your code.
+Never share this OTP with anyone. The Wampire team will never ask for your code.
 If you did not request this, you can safely ignore this email.
 
 Best regards,
-Code-a-Nova Organizing Committee
-contact@code-a-nova.org
+Wampire Organizing Committee
+contact@wampire.org
   `.trim();
 
   return { subject, html, text };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, MessageSquare, Send, CheckCircle2, Clock, HelpCircle, User } from 'lucide-react';
+import { Mail, MessageSquare, Send, Check, Clock, HelpCircle, User, Terminal } from 'lucide-react';
 import Badge from '../common/Badge.jsx';
 import Button from '../common/Button.jsx';
 import Input from '../common/Input.jsx';
@@ -20,6 +20,7 @@ export const ContactSection = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [serverError, setServerError] = useState(null);
 
   const validate = () => {
     const newErrors = {};
@@ -55,8 +56,6 @@ export const ContactSection = () => {
     }
   };
 
-  const [serverError, setServerError] = useState(null);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -88,88 +87,91 @@ export const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-20 lg:py-28 bg-slate-50/70 border-b border-slate-200/80">
+    <section id="contact" className="py-24 bg-[#000000] border-b border-white/10 relative tech-grid-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-          <Badge variant="primary" size="md">
-            Contact
+        <div className="max-w-3xl mx-auto text-center space-y-4 mb-20">
+          <Badge variant="pink" size="md">
+            DISPATCH & CONTACT
           </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
-            Connect With The Organizers
+          <h2 className="text-3xl sm:text-5xl font-serif font-black text-white tracking-tight">
+            CONNECT WITH THE{' '}
+            <span className="gradient-text-neon italic">ORGANIZERS.</span>
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg">
-            Whether you have inquiries regarding team formation, logistics, or partnership opportunities, we are here to assist.
+          <p className="text-neutral-400 text-sm sm:text-base leading-relaxed font-sans">
+            Whether you have inquiries regarding team formation, venue logistics, or venture partnership opportunities, the coordination committee is at your disposal.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
           {/* Left Column: Contact Details & Info */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-soft-sm space-y-6">
-              <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+            <div className="bg-[#09090b]/90 rounded-3xl p-8 border border-white/10 shadow-lg space-y-6">
+              <h3 className="text-lg font-serif font-bold text-white tracking-tight">
                 Official Channels
               </h3>
 
               <div className="space-y-4">
-                <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-                    <Mail className="w-5 h-5" />
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#000000] border border-white/10">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-[#FF007F] flex items-center justify-center shrink-0">
+                    <Mail className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">General Enquiries</div>
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-neutral-400">General Inquiries</div>
                     <a
                       href={`mailto:${EVENT_DETAILS.contactEmail}`}
-                      className="text-sm font-bold text-slate-900 hover:text-blue-600 transition-colors"
+                      className="text-xs sm:text-sm font-mono font-bold text-white hover:text-[#FF007F] transition-colors"
                     >
                       {EVENT_DETAILS.contactEmail}
                     </a>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                  <div className="w-10 h-10 rounded-xl bg-violet-100 text-violet-700 flex items-center justify-center shrink-0">
-                    <HelpCircle className="w-5 h-5" />
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#000000] border border-white/10">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-[#FF007F] flex items-center justify-center shrink-0">
+                    <HelpCircle className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Hacker Support</div>
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-neutral-400">Builder Support</div>
                     <a
                       href={`mailto:${EVENT_DETAILS.supportEmail}`}
-                      className="text-sm font-bold text-slate-900 hover:text-violet-600 transition-colors"
+                      className="text-xs sm:text-sm font-mono font-bold text-white hover:text-[#FF007F] transition-colors"
                     >
                       {EVENT_DETAILS.supportEmail}
                     </a>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0">
-                    <Clock className="w-5 h-5" />
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#000000] border border-white/10">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-white flex items-center justify-center shrink-0">
+                    <Clock className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Response Window</div>
-                    <div className="text-sm font-bold text-slate-800">
-                      Typically within 24–48 working hours
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-neutral-400">Response SLA</div>
+                    <div className="text-xs sm:text-sm font-mono text-neutral-300">
+                      Within 24–48 hours guaranteed
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 text-xs text-slate-500 leading-relaxed">
+              <div className="pt-4 border-t border-white/10 text-xs font-mono text-neutral-400 leading-relaxed">
                 Registered hackers receive dedicated Discord/Slack channel coordinates upon account verification.
               </div>
             </div>
           </div>
 
           {/* Right Column: Contact Form */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-soft-sm">
-            <h3 className="text-2xl font-extrabold text-slate-900 mb-2">
+          <div className="lg:col-span-7 bg-[#09090b]/90 rounded-3xl p-8 sm:p-10 border border-white/10 shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FF007F] to-transparent opacity-80" />
+
+            <h3 className="text-xl font-serif font-bold text-white mb-2">
               Send an Inquiry
             </h3>
-            <p className="text-sm text-slate-600 mb-6">
-              Complete the form below and the coordination committee will review your query.
+            <p className="text-xs text-neutral-400 mb-6 font-sans">
+              Complete the dispatch form below and the coordination committee will respond swiftly.
             </p>
 
             {serverError && (
@@ -188,7 +190,7 @@ export const ContactSection = () => {
                 <Alert
                   type="success"
                   title="Message Dispatched"
-                  message="Thank you for reaching out. The CODE-A-NOVA team has received your message and will respond shortly."
+                  message="Thank you for reaching out. The WAMPIRE team has received your message and will respond shortly."
                   onClose={() => setIsSubmitted(false)}
                 />
               </div>
@@ -223,27 +225,27 @@ export const ContactSection = () => {
 
               {/* Subject selector */}
               <div className="w-full flex flex-col gap-1.5 text-left">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Subject Category <span className="text-blue-600">*</span>
+                <label className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-300">
+                  Subject Category <span className="text-[#FF007F]">*</span>
                 </label>
                 <select
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="w-full bg-white text-slate-900 rounded-xl px-4 py-3 text-sm border border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-50 outline-none shadow-soft-sm"
+                  className="w-full bg-neutral-950/90 text-white rounded-xl px-4 py-3 text-sm border border-white/10 hover:border-white/20 focus:border-[#FF007F] focus:ring-2 focus:ring-[#FF007F]/25 outline-none font-sans"
                 >
-                  <option value="general">General Inquiry</option>
-                  <option value="team">Team Formation & Eligibility</option>
-                  <option value="mentor">Mentorship & Judging Opportunities</option>
-                  <option value="partnership">Sponsorship & Community Partners</option>
-                  <option value="technical">Portal Technical Support</option>
+                  <option value="general" className="bg-neutral-900 text-white">General Inquiry</option>
+                  <option value="team" className="bg-neutral-900 text-white">Team Formation & Eligibility</option>
+                  <option value="mentor" className="bg-neutral-900 text-white">Mentorship & Judging Opportunities</option>
+                  <option value="partnership" className="bg-neutral-900 text-white">Sponsorship & Community Partners</option>
+                  <option value="technical" className="bg-neutral-900 text-white">Portal Technical Support</option>
                 </select>
               </div>
 
               {/* Message text area */}
               <div className="w-full flex flex-col gap-1.5 text-left">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Message <span className="text-blue-600">*</span>
+                <label className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-300">
+                  Message <span className="text-[#FF007F]">*</span>
                 </label>
                 <textarea
                   name="message"
@@ -251,14 +253,14 @@ export const ContactSection = () => {
                   placeholder="Detail your question or requirement here..."
                   value={formData.message}
                   onChange={handleChange}
-                  className={`w-full bg-white text-slate-900 placeholder-slate-400 rounded-xl px-4 py-3 text-sm transition-all duration-200 outline-none border shadow-soft-sm resize-none ${
+                  className={`w-full bg-neutral-950/90 text-white placeholder-neutral-500 rounded-xl px-4 py-3 text-sm transition-all duration-200 outline-none border resize-none font-sans ${
                     errors.message
-                      ? 'border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-100'
-                      : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-50'
+                      ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20'
+                      : 'border-white/10 hover:border-white/20 focus:border-[#FF007F] focus:ring-2 focus:ring-[#FF007F]/25'
                   }`}
                 />
                 {errors.message && (
-                  <p className="text-xs text-red-600 font-medium mt-0.5">{errors.message}</p>
+                  <p className="text-xs text-red-400 font-medium mt-0.5">{errors.message}</p>
                 )}
               </div>
 
@@ -266,7 +268,7 @@ export const ContactSection = () => {
                 type="submit"
                 variant="primary"
                 size="lg"
-                className="w-full"
+                className="w-full text-xs font-mono uppercase tracking-wider font-bold"
                 isLoading={isSubmitting}
                 rightIcon={<Send className="w-4 h-4" />}
               >
@@ -283,4 +285,3 @@ export const ContactSection = () => {
 };
 
 export default ContactSection;
-

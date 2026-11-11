@@ -7,7 +7,7 @@ import config from './config/env.js';
 
 async function runAuthTests() {
   console.log('='.repeat(65));
-  console.log('       CODE-A-NOVA AUTHENTICATION SUITE VERIFICATION');
+  console.log('       WAMPIRE AUTHENTICATION SUITE VERIFICATION');
   console.log('='.repeat(65));
 
   let passed = 0;
@@ -62,7 +62,7 @@ async function runAuthTests() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fullName: 'Test Hacker',
-          email: 'hacker@code-a-nova.dev',
+          email: 'hacker@wampire.dev',
           password: 'Password1234!',
           confirmPassword: 'DifferentPassword!',
         }),
@@ -75,7 +75,7 @@ async function runAuthTests() {
       const resLoginMissing = await fetch(`${baseUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'test@code-a-nova.dev' }), // missing password
+        body: JSON.stringify({ email: 'test@wampire.dev' }), // missing password
       });
       assert(resLoginMissing.status === 400, 'Rejects login request with missing credentials (HTTP 400)');
 
@@ -83,7 +83,7 @@ async function runAuthTests() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: 'nonexistent@code-a-nova.dev',
+          email: 'nonexistent@wampire.dev',
           password: 'Password1234!',
         }),
       });
@@ -103,7 +103,7 @@ async function runAuthTests() {
 
       // TEST: Mocked User Verification & Login Simulation (In-memory verification)
       console.log('\n--- 6. Testing End-to-End Account Lifecycle In Logic ---');
-      const testEmail = 'pilot@code-a-nova.org';
+      const testEmail = 'pilot@wampire.org';
       const testPass = 'SuperSecurePass2026!';
       const testName = 'Pilot Architect';
 

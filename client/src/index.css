@@ -5,84 +5,103 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    color-scheme: light;
   }
 
   body {
-    background-color: #f8fafc;
-    color: #0f172a;
+    background-color: #FFFFFF;
+    color: #000000;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #FF007F;
+    color: #FFFFFF;
   }
 }
 
 @layer utilities {
-  /* Tech Grid Background */
-  .tech-grid {
-    background-size: 36px 36px;
+  /* Reco Labs Light Tech Grid */
+  .tech-grid-light {
+    background-color: #FFFFFF;
+    background-size: 40px 40px;
     background-image: 
-      linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+      linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
   }
 
-  .tech-dots {
-    background-image: radial-gradient(rgba(148, 163, 184, 0.18) 1px, transparent 1px);
-    background-size: 24px 24px;
+  .tech-dots-light {
+    background-image: radial-gradient(rgba(255, 0, 127, 0.15) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
 
-  /* Premium Light Glassmorphism */
-  .glass-nav {
+  /* Reco Labs Floating Translucent White Navbar */
+  .glass-nav-light {
     background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
   }
 
-  .glass-panel {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(226, 232, 240, 0.9);
-    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+  /* Reco Light Card with Crisp 1px Border and Pink Hover */
+  .card-reco-light {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .gradient-text-electric {
-    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  .card-reco-light:hover {
+    border-color: rgba(255, 0, 127, 0.45);
+    box-shadow: 0 12px 35px -5px rgba(255, 0, 127, 0.15);
+    transform: translateY(-2px);
+  }
+
+  /* Editorial Pink Gradient Headlines for Light Mode */
+  .gradient-text-pink {
+    background: linear-gradient(135deg, #000000 30%, #FF007F 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  .gradient-border {
-    position: relative;
-    border-radius: 1rem;
-    background: #ffffff;
+  .gradient-text-neon {
+    background: linear-gradient(135deg, #FF2A85 0%, #FF007F 60%, #000000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
-  .gradient-border::before {
-    content: '';
-    position: absolute;
-    inset: -1.5px;
-    border-radius: 1.1rem;
-    padding: 1.5px;
-    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+  .gradient-text-pure-pink {
+    background: linear-gradient(135deg, #FF2A85 0%, #FF007F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Glowing Borders & Shadows */
+  .border-glow-pink {
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.25);
+  }
+
+  .glow-box-pink {
+    box-shadow: 0 0 30px -5px rgba(255, 0, 127, 0.3);
   }
 }
 
-/* Custom Scrollbar for Light Theme */
+/* Custom Scrollbar in Pure White & Pink */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #FFFFFF;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: #E4E4E7;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 0, 127, 0.15);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #FF007F;
+  box-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
 }

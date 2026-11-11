@@ -61,7 +61,7 @@ app.use(requestLogger);
 // Root informational endpoint
 app.get('/', (req, res) => {
   res.status(200).json({
-    name: 'CODE-A-NOVA Hackathon API',
+    name: 'WAMPIRE Hackathon API',
     status: 'active',
     version: '1.0.0',
     documentation: '/api/v1/health',

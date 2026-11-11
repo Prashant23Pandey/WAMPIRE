@@ -1,14 +1,13 @@
 import React from 'react';
-import { Sparkles, Users, Award, Briefcase, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Users, Award, Briefcase, Check } from 'lucide-react';
 import Badge from '../common/Badge.jsx';
 
 export const EventHighlights = () => {
   const highlights = [
     {
-      title: 'Innovation',
-      tag: 'Creative Autonomy',
-      icon: <Sparkles className="w-6 h-6 text-blue-600" />,
-      accentGradient: 'from-blue-600 to-indigo-600',
+      title: 'Autonomous Engineering',
+      tag: 'CREATIVE AUTONOMY',
+      icon: <Sparkles className="w-5 h-5 text-[#FF007F]" />,
       description:
         'Unleash unconventional software concepts. Build prototypes that disrupt established norms and explore next-generation tech architectures.',
       bullets: [
@@ -18,23 +17,21 @@ export const EventHighlights = () => {
       ],
     },
     {
-      title: 'Team Collaboration',
-      tag: 'Squad Dynamics',
-      icon: <Users className="w-6 h-6 text-violet-600" />,
-      accentGradient: 'from-violet-600 to-purple-600',
+      title: 'Team Dynamics',
+      tag: 'SQUAD COHESION',
+      icon: <Users className="w-5 h-5 text-black" />,
       description:
         'Connect with software engineers, product designers, and technical visionaries to assemble high-output, cross-functional squads.',
       bullets: [
-        'Interactive matchmaking portal for solo hackers',
-        'Teams of up to 5 collaborative builders',
+        'Matchmaking engine for solo builders and squads',
+        'Squads of 1 to 5 collaborative builders',
         'Shared Git repositories & rapid agile sprints',
       ],
     },
     {
       title: 'Expert Mentorship',
-      tag: 'Technical Guidance',
-      icon: <Award className="w-6 h-6 text-indigo-600" />,
-      accentGradient: 'from-indigo-600 to-blue-600',
+      tag: 'ARCHITECTURAL ADVICE',
+      icon: <Award className="w-5 h-5 text-[#FF007F]" />,
       description:
         'Get feedback and unblock technical hurdles with dedicated mentors who bring production engineering and system design experience.',
       bullets: [
@@ -44,10 +41,9 @@ export const EventHighlights = () => {
       ],
     },
     {
-      title: 'Real-world Problem Solving',
-      tag: 'Tangible Utility',
-      icon: <Briefcase className="w-6 h-6 text-emerald-600" />,
-      accentGradient: 'from-emerald-600 to-teal-600',
+      title: 'Real-World Utility',
+      tag: 'TANGIBLE VALUE',
+      icon: <Briefcase className="w-5 h-5 text-black" />,
       description:
         'Develop software products engineered to endure beyond demo day—creating practical tools that resolve concrete real-world pain points.',
       bullets: [
@@ -59,19 +55,20 @@ export const EventHighlights = () => {
   ];
 
   return (
-    <section id="highlights" className="py-20 lg:py-28 bg-slate-50/70 border-b border-slate-200/80">
+    <section id="highlights" className="py-24 bg-neutral-50/70 border-b border-black/10 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-          <Badge variant="violet" size="md">
-            Event Highlights
+          <Badge variant="pink" size="md">
+            EVENT HIGHLIGHTS
           </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
-            Designed For Exceptional Outcomes
+          <h2 className="text-3xl sm:text-5xl font-serif font-black text-black tracking-tight">
+            CRAFTED FOR{' '}
+            <span className="gradient-text-neon italic">EXCEPTIONAL MINDS.</span>
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg">
-            Every element of CODE-A-NOVA is intentionally crafted to elevate your technical prowess, expand your professional network, and push the envelope of software design.
+          <p className="text-neutral-600 text-sm sm:text-base leading-relaxed font-sans">
+            Every element of WAMPIRE is intentionally crafted to elevate your technical prowess, expand your professional network, and push the envelope of software design.
           </p>
         </div>
 
@@ -80,38 +77,44 @@ export const EventHighlights = () => {
           {highlights.map((card, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-3xl p-8 border border-slate-200/90 shadow-soft-sm hover:shadow-soft-xl hover:border-slate-300 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group"
+              className="bg-white rounded-3xl p-8 border border-black/10 hover:border-[#FF007F] shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_-5px_rgba(255,0,127,0.15)] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group"
             >
               {/* Top Accent line */}
-              <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${card.accentGradient}`} />
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FF007F] to-transparent opacity-60 group-hover:opacity-100 transition-opacity" />
 
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shadow-soft-sm group-hover:scale-110 transition-transform">
+                  <div className="w-11 h-11 rounded-2xl bg-[#FF007F]/10 border border-[#FF007F]/20 flex items-center justify-center group-hover:scale-110 group-hover:border-[#FF007F] transition-all">
                     {card.icon}
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-3 py-1 rounded-full">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-700 bg-neutral-100 border border-black/10 px-3 py-1 rounded-full font-semibold">
                     {card.tag}
                   </span>
                 </div>
 
-                <h3 className="text-2xl font-extrabold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">
+                <h3 className="text-2xl font-display font-bold text-black mb-3 group-hover:text-[#FF007F] transition-colors">
                   {card.title}
                 </h3>
 
-                <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                <p className="text-sm text-neutral-600 leading-relaxed mb-6 font-sans">
                   {card.description}
                 </p>
 
-                {/* Feature Bullet Points */}
-                <div className="space-y-3 pt-4 border-t border-slate-100">
-                  {card.bullets.map((point, pIdx) => (
-                    <div key={pIdx} className="flex items-start gap-2.5 text-xs text-slate-700 font-medium">
-                      <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                      <span>{point}</span>
+                <div className="space-y-2.5">
+                  {card.bullets.map((bullet, bIdx) => (
+                    <div key={bIdx} className="flex items-center gap-2.5 text-xs text-neutral-700">
+                      <div className="w-4 h-4 rounded-full bg-[#FF007F]/10 flex items-center justify-center flex-shrink-0">
+                        <Check className="w-2.5 h-2.5 text-[#FF007F]" />
+                      </div>
+                      <span>{bullet}</span>
                     </div>
                   ))}
                 </div>
+              </div>
+
+              <div className="mt-8 pt-5 border-t border-black/10 flex items-center justify-between text-xs font-mono text-neutral-500 uppercase tracking-widest">
+                <span>[ MODULE 0{idx + 1} ]</span>
+                <span className="text-[#FF007F] font-bold">READY</span>
               </div>
             </div>
           ))}
@@ -123,4 +126,3 @@ export const EventHighlights = () => {
 };
 
 export default EventHighlights;
-

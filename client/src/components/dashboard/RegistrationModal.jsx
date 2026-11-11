@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Rocket, Plus, Trash2, CheckCircle2 } from 'lucide-react';
+import { Rocket, Plus, Trash2, Check } from 'lucide-react';
 import Modal from '../common/Modal.jsx';
 import Input from '../common/Input.jsx';
 import Button from '../common/Button.jsx';
@@ -41,7 +41,7 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleTeamSizeChange = (size) => {
-    const numSize = parseInt(size, 10);
+    const numSize = Math.max(1, Math.min(5, parseInt(size, 10)));
     const requiredMembers = numSize - 1;
     const current = [...formData.teamMembers];
 
@@ -101,8 +101,8 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
         email: formData.email.trim().toLowerCase(),
         mobileNumber: formData.mobileNumber.trim(),
         collegeName: formData.collegeName.trim(),
-        course: formData.course.trim(),
-        branch: formData.branch.trim(),
+        course: formData.course,
+        branch: formData.branch,
         yearOfStudy: formData.yearOfStudy,
         domain: formData.domain,
         projectName: formData.projectName.trim(),
@@ -110,39 +110,38 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
         prototypeLink: formData.prototypeLink.trim(),
         demoVideoLink: formData.demoVideoLink.trim(),
         teamSize: formData.teamSize,
-        teamMembers: formData.teamMembers,
+        teamMembers: formData.teamMembers.map((m) => ({
+          name: m.name.trim(),
+          email: m.email.trim().toLowerCase(),
+          role: m.role || 'Developer',
+        })),
       });
 
-      if (res.data?.registration) {
-        toast.success(
-          'Your hackathon squad registration is confirmed!',
-          'Registration Submitted'
-        );
-        if (onRegistrationCompleted) {
-          onRegistrationCompleted(res.data.registration);
-        }
-        onClose();
-      }
+      toast.success('Your hackathon squad registration is confirmed!', 'Registration Complete');
+      if (onRegistrationCompleted) onRegistrationCompleted(res.data?.registration || res.data);
+      onClose();
     } catch (err) {
-      setError(err.message || 'Failed to submit registration. Please check inputs and try again.');
+      const msg = err.message || 'Unable to submit hackathon registration.';
+      setError(msg);
+      toast.error(msg, 'Registration Error');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Hackathon Registration Portal" size="lg">
-      <form onSubmit={handleSubmit} className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
+    <Modal isOpen={isOpen} onClose={onClose} title="Register Hackathon Squad" size="lg">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
           <Alert
             type="error"
-            title="Registration Notice"
+            title="Registration Error"
             message={error}
             onClose={() => setError(null)}
           />
         )}
 
-        {/* Lead Participant Details */}
+        {/* Lead Participant Info */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Input
             label="Lead Participant Name"
@@ -183,31 +182,31 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
         {/* Academic Details */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="text-left space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Course</label>
+            <label className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-700">Course</label>
             <input
               type="text"
               value={formData.course}
               onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-              className="w-full bg-white text-slate-900 rounded-xl px-3.5 py-2.5 text-sm border border-slate-200"
+              className="w-full bg-white text-black rounded-xl px-3.5 py-2.5 text-sm border border-black/15 outline-none focus:border-[#FF007F] font-sans"
               required
             />
           </div>
           <div className="text-left space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Branch</label>
+            <label className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-700">Branch</label>
             <input
               type="text"
               value={formData.branch}
               onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
-              className="w-full bg-white text-slate-900 rounded-xl px-3.5 py-2.5 text-sm border border-slate-200"
+              className="w-full bg-white text-black rounded-xl px-3.5 py-2.5 text-sm border border-black/15 outline-none focus:border-[#FF007F] font-sans"
               required
             />
           </div>
           <div className="text-left space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Year</label>
+            <label className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-700">Year</label>
             <select
               value={formData.yearOfStudy}
               onChange={(e) => setFormData({ ...formData, yearOfStudy: e.target.value })}
-              className="w-full bg-white text-slate-900 rounded-xl px-3.5 py-2.5 text-sm border border-slate-200"
+              className="w-full bg-white text-black rounded-xl px-3.5 py-2.5 text-sm border border-black/15 outline-none focus:border-[#FF007F] font-sans"
             >
               <option value="1st Year">1st Year</option>
               <option value="2nd Year">2nd Year</option>
@@ -220,13 +219,13 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
 
         {/* Domain Track Selection */}
         <div className="text-left space-y-1">
-          <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-            Selected Hackathon Domain <span className="text-blue-600">*</span>
+          <label className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-700">
+            Selected Hackathon Domain <span className="text-[#FF007F]">*</span>
           </label>
           <select
             value={formData.domain}
             onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
-            className="w-full bg-white text-slate-900 rounded-xl px-3.5 py-2.5 text-sm border border-slate-200"
+            className="w-full bg-white text-black rounded-xl px-3.5 py-2.5 text-sm border border-black/15 outline-none focus:border-[#FF007F] font-sans"
           >
             {DOMAINS.map((d) => (
               <option key={d} value={d}>
@@ -251,44 +250,46 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
           <Input
             label="PPT / Pitch Link"
             type="url"
-            placeholder="https://slides..."
+            placeholder="https://drive.google.com/..."
             value={formData.pptLink}
             onChange={(e) => setFormData({ ...formData, pptLink: e.target.value })}
+            required
           />
           <Input
             label="Prototype / Repo Link"
             type="url"
-            placeholder="https://github..."
+            placeholder="https://github.com/..."
             value={formData.prototypeLink}
             onChange={(e) => setFormData({ ...formData, prototypeLink: e.target.value })}
+            required
           />
           <Input
             label="Demo Video Link"
             type="url"
-            placeholder="https://youtube..."
+            placeholder="https://youtube.com/..."
             value={formData.demoVideoLink}
             onChange={(e) => setFormData({ ...formData, demoVideoLink: e.target.value })}
           />
         </div>
 
-        {/* Team Size Selector */}
-        <div className="text-left space-y-2 pt-2 border-t border-slate-100">
-          <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-            Team Squad Size
+        {/* Team Size Selector (1 to 5) */}
+        <div className="text-left space-y-2 pt-2 border-t border-black/10">
+          <label className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-700">
+            Team Squad Size (1-5 Builders)
           </label>
-          <div className="grid grid-cols-4 gap-2">
-            {[1, 2, 3, 4].map((size) => (
+          <div className="grid grid-cols-5 gap-2">
+            {[1, 2, 3, 4, 5].map((size) => (
               <button
                 key={size}
                 type="button"
                 onClick={() => handleTeamSizeChange(size)}
-                className={`py-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
+                className={`py-2 rounded-xl text-xs font-mono font-bold border transition-colors cursor-pointer ${
                   formData.teamSize === size
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                    ? 'bg-[#FF007F] text-white border-[#FF007F] shadow-glow-pink-sm'
+                    : 'bg-white text-neutral-700 border-black/15 hover:border-black/30'
                 }`}
               >
-                {size} {size === 1 ? 'Solo' : 'Hackers'}
+                {size} {size === 1 ? 'Solo' : 'Squad'}
               </button>
             ))}
           </div>
@@ -297,16 +298,16 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
         {/* Team Members Inputs */}
         {formData.teamSize > 1 && (
           <div className="space-y-3 pt-2 text-left">
-            <p className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+            <p className="text-xs font-mono font-bold text-neutral-700 uppercase tracking-wider">
               Squad Member Information ({formData.teamMembers.length} additional members)
             </p>
 
             {formData.teamMembers.map((member, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2"
+                className="p-3.5 rounded-2xl bg-neutral-50 border border-black/10 space-y-2"
               >
-                <div className="text-xs font-bold text-blue-600">Member #{idx + 2}</div>
+                <div className="text-xs font-mono font-bold text-[#FF007F]">Builder #{idx + 2}</div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <input
                     type="text"
@@ -314,7 +315,7 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
                     value={member.name}
                     onChange={(e) => handleMemberChange(idx, 'name', e.target.value)}
                     required
-                    className="w-full bg-white text-slate-900 rounded-xl px-3 py-2 text-xs border border-slate-200"
+                    className="w-full bg-white text-black rounded-xl px-3 py-2 text-xs border border-black/15 outline-none focus:border-[#FF007F] font-sans"
                   />
                   <input
                     type="email"
@@ -322,14 +323,14 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
                     value={member.email}
                     onChange={(e) => handleMemberChange(idx, 'email', e.target.value)}
                     required
-                    className="w-full bg-white text-slate-900 rounded-xl px-3 py-2 text-xs border border-slate-200"
+                    className="w-full bg-white text-black rounded-xl px-3 py-2 text-xs border border-black/15 outline-none focus:border-[#FF007F] font-mono"
                   />
                   <input
                     type="text"
                     placeholder="Role (e.g. ML Eng)"
                     value={member.role}
                     onChange={(e) => handleMemberChange(idx, 'role', e.target.value)}
-                    className="w-full bg-white text-slate-900 rounded-xl px-3 py-2 text-xs border border-slate-200"
+                    className="w-full bg-white text-black rounded-xl px-3 py-2 text-xs border border-black/15 outline-none focus:border-[#FF007F] font-sans"
                   />
                 </div>
               </div>
@@ -338,8 +339,8 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
         )}
 
         {/* Submit Actions */}
-        <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
-          <Button variant="ghost" size="md" type="button" onClick={onClose}>
+        <div className="pt-4 flex justify-end gap-3 border-t border-black/10 font-mono">
+          <Button variant="ghost" size="md" type="button" onClick={onClose} className="text-xs text-neutral-700 hover:text-black">
             Cancel
           </Button>
           <Button
@@ -348,6 +349,7 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
             type="submit"
             isLoading={isSubmitting}
             leftIcon={<Rocket className="w-4 h-4" />}
+            className="text-xs uppercase tracking-wider font-bold shadow-glow-pink"
           >
             Confirm Registration
           </Button>
@@ -358,4 +360,3 @@ export const RegistrationModal = ({ isOpen, onClose, user, onRegistrationComplet
 };
 
 export default RegistrationModal;
-

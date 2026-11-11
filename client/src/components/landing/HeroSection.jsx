@@ -1,179 +1,176 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, Terminal, Code2, Cpu, GitBranch, Layers, CheckCircle } from 'lucide-react';
+import { ArrowRight, Sparkles, Terminal, Cpu, GitBranch, Check, Zap } from 'lucide-react';
 import Button from '../common/Button.jsx';
-import Badge from '../common/Badge.jsx';
 
 export const HeroSection = () => {
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const navOffset = 76;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - navOffset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
-    }
-  };
-
   return (
-    <section id="home" className="relative pt-12 pb-20 lg:pt-20 lg:pb-32 overflow-hidden tech-grid">
-      {/* Background radial glow accents (Light theme subtle electric blue & violet) */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[380px] bg-gradient-to-tr from-blue-200/40 via-violet-200/30 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-1/3 -left-20 w-72 h-72 bg-blue-100/50 rounded-full blur-2xl pointer-events-none -z-10" />
-      <div className="absolute bottom-10 -right-20 w-80 h-80 bg-violet-100/50 rounded-full blur-3xl pointer-events-none -z-10" />
+    <section id="home" className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-white tech-grid-light">
+      {/* Background subtle radial pink glow accents */}
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-[#FF007F]/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute top-1/3 -left-28 w-80 h-80 bg-[#FF007F]/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 -right-28 w-96 h-96 bg-[#FF007F]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
           {/* Left Column: Heading & Copy */}
           <div className="lg:col-span-7 text-center lg:text-left space-y-8">
-            {/* Pill Tag */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 shadow-soft-sm text-xs font-bold text-slate-800">
-              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-              <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent uppercase tracking-wider">
-                Registration Phase Active
+            {/* Floating Pill Badges */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#FF007F]/40 shadow-[0_2px_15px_rgba(255,0,127,0.15)] text-xs font-mono font-bold text-black">
+                <span className="w-2 h-2 rounded-full bg-[#FF007F] animate-pulse" />
+                <span className="uppercase tracking-widest text-[#FF007F]">
+                  REGISTRATION PHASE ACTIVE
+                </span>
+                <Sparkles className="w-3.5 h-3.5 text-[#FF007F]" />
+              </div>
+              <span className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-neutral-100 border border-black/10 text-[11px] font-mono uppercase tracking-wider text-neutral-700">
+                EST. 2026 // EDITION II
               </span>
-              <Sparkles className="w-3.5 h-3.5 text-violet-600" />
             </div>
 
-            {/* Main Heading */}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-[1.08]">
-              INNOVATE TODAY. <br />
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
-                BUILD TOMORROW.
-              </span>
-            </h1>
+            {/* Main Editorial Heading */}
+            <div className="space-y-3">
+              <p className="text-xs sm:text-sm font-mono uppercase tracking-[0.3em] text-[#FF007F] font-bold">
+                [ THE PREMIER TECH HACKATHON ]
+              </p>
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-black text-black tracking-tight leading-[1.05]">
+                AN ARENA ENGINEERED FOR{' '}
+                <span className="gradient-text-neon italic block sm:inline">
+                  BUILDERS.
+                </span>
+              </h1>
+            </div>
 
             {/* Supporting Text */}
-            <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-              Where bold ideas meet brilliant minds. Build, collaborate and create solutions that matter.
+            <p className="text-base sm:text-lg text-neutral-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+              Where ambitious engineers assemble to break boundaries. 48 hours of intense coding, architectural grit, and scalable product deployment.
             </p>
 
-            {/* CTA Buttons */}
+            {/* Action Buttons: Pill shaped with glow */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <Link to="/register" className="w-full sm:w-auto">
                 <Button
                   variant="primary"
                   size="lg"
-                  className="w-full sm:w-auto shadow-electric"
-                  rightIcon={<ArrowRight className="w-5 h-5" />}
+                  className="w-full sm:w-auto text-sm uppercase tracking-wider font-mono font-bold shadow-glow-pink"
+                  rightIcon={<ArrowRight className="w-4 h-4" />}
                 >
                   Register Now
                 </Button>
               </Link>
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={() => scrollToSection('event')}
-                className="w-full sm:w-auto"
-              >
-                Explore Event
-              </Button>
+              <Link to="/events" className="w-full sm:w-auto">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="w-full sm:w-auto text-sm uppercase tracking-wider font-mono text-black bg-white border border-black/15 hover:border-black/30 shadow-sm"
+                >
+                  Explore Tracks
+                </Button>
+              </Link>
             </div>
 
-            {/* Value Indicators */}
-            <div className="pt-6 border-t border-slate-200/80 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0 text-left">
+            {/* Reco-style Value Indicators */}
+            <div className="pt-6 border-t border-black/10 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0 text-left">
               <div>
-                <p className="text-xs uppercase tracking-wider font-bold text-slate-400">Environment</p>
-                <p className="text-sm font-extrabold text-slate-800 mt-0.5">High Energy</p>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-500">Environment</p>
+                <p className="text-sm font-display font-bold text-black mt-1">High Intensity</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider font-bold text-slate-400">Collaboration</p>
-                <p className="text-sm font-extrabold text-slate-800 mt-0.5">Squad Matching</p>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-500">Prize Pool</p>
+                <p className="text-sm font-display font-bold text-[#FF007F] mt-1">₹1,50,000 INR</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider font-bold text-slate-400">Outcomes</p>
-                <p className="text-sm font-extrabold text-slate-800 mt-0.5">Real Impact</p>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-500">Sprint Span</p>
+                <p className="text-sm font-display font-bold text-black mt-1">48 Hours Live</p>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Visually Attractive Hackathon Abstract 3D Tech Visual */}
+          {/* Right Column: Visually Attractive High-Tech Terminal Card on White */}
           <div className="lg:col-span-5 relative flex items-center justify-center">
             <div className="relative w-full max-w-md lg:max-w-none">
               
-              {/* Outer Decorative Gradient Frame */}
-              <div className="relative rounded-3xl bg-gradient-to-tr from-blue-500/10 via-violet-500/10 to-indigo-500/20 p-4 sm:p-6 backdrop-blur-xl border border-white/80 shadow-soft-xl">
+              {/* Outer Decorative Glow Frame */}
+              <div className="relative rounded-3xl bg-white p-4 sm:p-6 border border-black/10 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.08)]">
                 
                 {/* Central Code Terminal Card */}
-                <div className="bg-white rounded-2xl shadow-soft-md border border-slate-200/80 overflow-hidden">
+                <div className="bg-neutral-50 rounded-2xl border border-black/10 overflow-hidden shadow-inner">
                   
                   {/* Terminal Header */}
-                  <div className="bg-slate-50/90 px-4 py-3 border-b border-slate-200/80 flex items-center justify-between">
+                  <div className="bg-neutral-100 px-4 py-3 border-b border-black/10 flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                      <span className="w-3 h-3 rounded-full bg-red-400 inline-block" />
-                      <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
-                      <span className="w-3 h-3 rounded-full bg-emerald-400 inline-block" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#FF007F] inline-block" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-neutral-400 inline-block" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-neutral-300 inline-block" />
                     </div>
-                    <div className="text-[11px] font-mono font-medium text-slate-500 flex items-center gap-1">
-                      <Terminal className="w-3.5 h-3.5 text-blue-600" />
-                      <span>code-a-nova-build.sh</span>
+                    <div className="text-[11px] font-mono font-medium text-neutral-700 flex items-center gap-1.5">
+                      <Terminal className="w-3.5 h-3.5 text-[#FF007F]" />
+                      <span>wampire-core.ts</span>
                     </div>
-                    <span className="w-8" />
+                    <span className="text-[10px] font-mono text-[#FF007F] font-bold uppercase tracking-wider">LIVE</span>
                   </div>
 
                   {/* Terminal Code Snippet Preview */}
-                  <div className="p-5 font-mono text-xs leading-relaxed text-slate-800 space-y-2 bg-gradient-to-b from-white to-slate-50/50">
-                    <div className="text-slate-400">// Assembling project squad & pipeline</div>
+                  <div className="p-5 font-mono text-xs leading-relaxed text-neutral-800 space-y-2 bg-white">
+                    <div className="text-neutral-400">// Assembling project squad & pipeline</div>
                     <div>
-                      <span className="text-violet-600 font-semibold">const</span>{' '}
-                      <span className="text-blue-600 font-semibold">solution</span> ={' '}
-                      <span className="text-violet-600 font-semibold">await</span>{' '}
-                      <span className="text-slate-900 font-bold">CodeANova</span>.
-                      <span className="text-blue-600">ignite</span>({`{`}
+                      <span className="text-[#FF007F] font-bold">const</span>{' '}
+                      <span className="text-black font-semibold">squad</span> ={' '}
+                      <span className="text-[#FF007F] font-bold">await</span>{' '}
+                      <span className="text-black font-black tracking-wide">Wampire</span>.
+                      <span className="text-[#FF007F] font-bold">deploy</span>({`{`}
                     </div>
-                    <div className="pl-4 text-slate-600">
-                      track: <span className="text-emerald-600 font-medium">'NextGen Engineering'</span>,
+                    <div className="pl-4 text-neutral-600">
+                      track: <span className="text-black font-medium">'NextGen Autonomous Engineering'</span>,
                     </div>
-                    <div className="pl-4 text-slate-600">
-                      squadSize: <span className="text-blue-600 font-medium">4</span>,
+                    <div className="pl-4 text-neutral-600">
+                      squadCap: <span className="text-[#FF007F] font-bold">5</span>,
                     </div>
-                    <div className="pl-4 text-slate-600">
-                      focus: <span className="text-emerald-600 font-medium">'Scalable Real-World Impact'</span>,
+                    <div className="pl-4 text-neutral-600">
+                      architecture: <span className="text-black font-medium">'MERN + Cloud Microservices'</span>,
                     </div>
-                    <div className="pl-4 text-slate-600">
-                      status: <span className="text-emerald-600 font-medium">'Ready to Deploy'</span>
+                    <div className="pl-4 text-neutral-600">
+                      status: <span className="text-[#FF007F] font-semibold">'PRODUCTION_READY'</span>
                     </div>
                     <div>{`});`}</div>
-                    <div className="pt-2 flex items-center gap-2 text-emerald-600 font-medium">
-                      <CheckCircle className="w-4 h-4" />
-                      <span>Pipeline ready. Hacking initialized.</span>
+                    <div className="pt-2 flex items-center gap-2 text-black font-mono font-medium border-t border-black/10">
+                      <Check className="w-4 h-4 text-[#FF007F]" />
+                      <span>Pipeline armed. Hacker sprint live.</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Floating Abstract Element 1: Git Branch Node */}
-                <div className="absolute -top-5 -left-4 sm:-left-6 bg-white/95 backdrop-blur-md rounded-xl p-3 border border-slate-200 shadow-soft-xl flex items-center gap-3 animate-float">
-                  <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                    <GitBranch className="w-5 h-5" />
+                <div className="absolute -top-4 -left-4 sm:-left-6 bg-white rounded-2xl p-3 border border-black/10 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1)] flex items-center gap-3 animate-float">
+                  <div className="w-8 h-8 rounded-xl bg-[#FF007F]/10 text-[#FF007F] flex items-center justify-center border border-[#FF007F]/20">
+                    <GitBranch className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-slate-900">Sprint Branch</div>
-                    <div className="text-[10px] text-slate-500 font-mono">main → production</div>
+                    <div className="text-xs font-mono font-bold text-black">Sprint Branch</div>
+                    <div className="text-[10px] text-neutral-500 font-mono">origin/main → ship</div>
                   </div>
                 </div>
 
-                {/* Floating Abstract Element 2: Architectural AI Engine */}
-                <div className="absolute -bottom-6 -right-4 sm:-right-6 bg-white/95 backdrop-blur-md rounded-xl p-3 border border-slate-200 shadow-soft-xl flex items-center gap-3 animate-float" style={{ animationDelay: '2s' }}>
-                  <div className="w-9 h-9 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center">
-                    <Cpu className="w-5 h-5" />
+                {/* Floating Abstract Element 2: Architecture Node */}
+                <div className="absolute -bottom-5 -right-4 sm:-right-6 bg-white rounded-2xl p-3 border border-black/10 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1)] flex items-center gap-3 animate-float" style={{ animationDelay: '2s' }}>
+                  <div className="w-8 h-8 rounded-xl bg-[#FF007F]/10 text-[#FF007F] flex items-center justify-center border border-[#FF007F]/20">
+                    <Cpu className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-slate-900">System Architecture</div>
-                    <div className="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      Full Stack Synced
+                    <div className="text-xs font-mono font-bold text-black">System Core</div>
+                    <div className="text-[10px] text-[#FF007F] font-mono flex items-center gap-1 font-bold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF007F] animate-pulse" />
+                      100% Operational
                     </div>
                   </div>
                 </div>
 
                 {/* Floating Abstract Element 3: Collaboration Badge */}
-                <div className="absolute top-1/2 -right-6 sm:-right-8 -translate-y-1/2 bg-white/95 backdrop-blur-md rounded-xl px-3 py-2 border border-slate-200 shadow-soft-xl hidden sm:flex items-center gap-2 animate-float" style={{ animationDelay: '4s' }}>
-                  <Layers className="w-4 h-4 text-blue-600" />
-                  <span className="text-xs font-extrabold text-slate-800">48-Hr Sprint</span>
+                <div className="absolute top-1/2 -right-5 sm:-right-7 -translate-y-1/2 bg-white rounded-full px-3.5 py-1.5 border border-[#FF007F]/40 shadow-sm hidden sm:flex items-center gap-2 animate-float" style={{ animationDelay: '4s' }}>
+                  <Zap className="w-3.5 h-3.5 text-[#FF007F]" />
+                  <span className="text-[11px] font-mono font-bold text-black">48-Hr Sprint</span>
                 </div>
 
               </div>

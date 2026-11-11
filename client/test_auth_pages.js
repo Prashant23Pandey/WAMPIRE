@@ -29,7 +29,7 @@ function assert(condition, message) {
 }
 
 console.log('================================================================');
-console.log('🚀 Running CODE-A-NOVA Frontend Auth Pages Verification');
+console.log('🚀 Running WAMPIRE Frontend Auth Pages Verification');
 console.log('================================================================\n');
 
 // 1. Check existence of required files
@@ -81,7 +81,7 @@ assert(loginCode.includes('email'), 'Login includes email field');
 assert(loginCode.includes('password'), 'Login includes password field');
 assert(loginCode.includes('showPassword'), 'Features password visibility toggle');
 assert(loginCode.includes('rememberEmail'), 'Includes remember email option');
-assert(loginCode.includes('code_a_nova_remembered_email'), 'Persists remembered email to localStorage');
+assert(loginCode.includes('wampire_remembered_email'), 'Persists remembered email to localStorage');
 assert(!loginCode.includes('Forgot password?'), 'Omits unimplemented forgot password UI as instructed');
 assert(loginCode.includes('/dashboard'), 'Navigates to Dashboard upon successful authentication');
 

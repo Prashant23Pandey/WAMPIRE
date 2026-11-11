@@ -228,11 +228,11 @@ export const VerifyOTP = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-50 to-violet-50 border border-blue-200/80 text-blue-600 flex items-center justify-center mx-auto mb-3 shadow-soft-sm">
+        <div className="w-12 h-12 rounded-2xl bg-white border border-[#FF007F]/40 text-[#FF007F] flex items-center justify-center mx-auto mb-3 shadow-glow-pink-sm">
           <ShieldCheck className="w-6 h-6 stroke-[2.5]" />
         </div>
-        <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Verify Your Account</h2>
-        <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
+        <h2 className="text-2xl font-serif font-black text-black tracking-tight">Verify Your Account</h2>
+        <p className="mt-1 text-xs text-neutral-600 max-w-sm mx-auto font-sans">
           We sent a six-digit verification code to your email. Enter it below to unlock your portal account.
         </p>
       </div>
@@ -249,11 +249,11 @@ export const VerifyOTP = () => {
       <form onSubmit={handleVerify} className="space-y-5">
         {/* Email Address Confirmation / Edit */}
         <div className="text-left space-y-1">
-          <label htmlFor="verify-email" className="text-xs font-bold uppercase tracking-wider text-slate-700">
-            Account Email <span className="text-blue-600">*</span>
+          <label htmlFor="verify-email" className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-700">
+            Account Email <span className="text-[#FF007F]">*</span>
           </label>
           <div className="relative flex items-center">
-            <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+            <div className="absolute left-3.5 text-neutral-400 pointer-events-none">
               <Mail className="w-4 h-4" />
             </div>
             <input
@@ -261,9 +261,9 @@ export const VerifyOTP = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="hacker@code-a-nova.org"
+              placeholder="hacker@wampire.org"
               required
-              className="w-full bg-white text-slate-900 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2.5 text-sm border border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-50 outline-none shadow-soft-sm transition-all"
+              className="w-full bg-white text-black placeholder-neutral-400 rounded-xl pl-10 pr-4 py-2.5 text-sm border border-black/15 hover:border-black/30 focus:border-[#FF007F] focus:ring-2 focus:ring-[#FF007F]/20 outline-none transition-all font-sans"
             />
           </div>
         </div>
@@ -271,17 +271,17 @@ export const VerifyOTP = () => {
         {/* Six Individual OTP Input Boxes */}
         <div className="space-y-2 text-left">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-              6-Digit Security Code <span className="text-blue-600">*</span>
+            <label className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-700">
+              6-Digit Security Code <span className="text-[#FF007F]">*</span>
             </label>
             {/* Expiry Countdown */}
             <span
               className={`text-xs font-mono font-bold flex items-center gap-1 transition-colors ${
-                expirySeconds < 60 ? 'text-red-600 animate-pulse' : 'text-slate-500'
+                expirySeconds < 60 ? 'text-[#FF007F] animate-pulse' : 'text-neutral-500'
               }`}
               title="Time until verification code expires"
             >
-              <Clock className="w-3.5 h-3.5" />
+              <Clock className="w-3.5 h-3.5 text-[#FF007F]" />
               {expirySeconds > 0 ? (
                 <span>Expires in {formatTime(expirySeconds)}</span>
               ) : (
@@ -308,13 +308,13 @@ export const VerifyOTP = () => {
                 onChange={(e) => handleDigitChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 disabled={isVerifying || expirySeconds <= 0}
-                className={`w-full aspect-square text-center font-mono font-extrabold text-2xl sm:text-3xl rounded-xl border outline-none shadow-soft-sm transition-all duration-150 ${
+                className={`w-full aspect-square text-center font-mono font-extrabold text-2xl sm:text-3xl rounded-xl border outline-none transition-all duration-150 ${
                   digit
-                    ? 'border-blue-600 bg-blue-50/40 text-blue-900 ring-2 ring-blue-100'
-                    : 'border-slate-200 bg-white text-slate-900 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-50'
+                    ? 'border-[#FF007F] bg-[#FF007F]/10 text-black ring-2 ring-[#FF007F]/30 shadow-glow-pink-sm'
+                    : 'border-black/15 bg-white text-black hover:border-black/30 focus:border-[#FF007F] focus:ring-2 focus:ring-[#FF007F]/20'
                 } ${
                   expirySeconds <= 0
-                    ? 'opacity-50 cursor-not-allowed bg-slate-50'
+                    ? 'opacity-50 cursor-not-allowed bg-neutral-100'
                     : 'cursor-text'
                 }`}
                 aria-label={`Digit ${index + 1}`}
@@ -322,7 +322,7 @@ export const VerifyOTP = () => {
             ))}
           </div>
 
-          <p className="text-[11px] text-slate-500 text-center">
+          <p className="text-[11px] text-neutral-500 font-mono text-center">
             Paste support enabled. You can copy the code directly from your email.
           </p>
         </div>
@@ -332,7 +332,7 @@ export const VerifyOTP = () => {
           type="submit"
           variant="primary"
           size="lg"
-          className="w-full mt-2"
+          className="w-full mt-2 font-mono text-xs uppercase tracking-wider font-bold shadow-glow-pink"
           isLoading={isVerifying}
           disabled={otpCode.length !== 6 || isVerifying || expirySeconds <= 0}
           rightIcon={<ArrowRight className="w-4 h-4" />}
@@ -342,13 +342,13 @@ export const VerifyOTP = () => {
       </form>
 
       {/* Resend Action & Cooldown */}
-      <div className="pt-4 border-t border-slate-100 flex flex-col items-center justify-center gap-2 text-xs text-slate-500">
+      <div className="pt-4 border-t border-black/10 flex flex-col items-center justify-center gap-2 text-xs font-mono text-neutral-600">
         <span>Didn't receive the email or did your code expire?</span>
         <button
           type="button"
           onClick={handleResend}
           disabled={resendCooldown > 0 || isResending}
-          className="font-bold text-blue-600 hover:text-blue-700 disabled:text-slate-400 disabled:cursor-not-allowed inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+          className="font-bold text-[#FF007F] hover:text-[#E60072] disabled:text-neutral-400 disabled:cursor-not-allowed inline-flex items-center gap-1.5 transition-colors cursor-pointer"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${isResending ? 'animate-spin' : ''}`} />
           {resendCooldown > 0 ? (
@@ -359,8 +359,8 @@ export const VerifyOTP = () => {
         </button>
       </div>
 
-      <div className="text-center text-xs text-slate-400">
-        <Link to="/login" className="hover:text-slate-600 transition-colors">
+      <div className="text-center text-xs font-mono text-neutral-600">
+        <Link to="/login" className="hover:text-[#FF007F] transition-colors">
           Already verified? Sign In here
         </Link>
       </div>

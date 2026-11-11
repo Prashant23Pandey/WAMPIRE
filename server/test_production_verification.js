@@ -1,5 +1,5 @@
 /**
- * CODE-A-NOVA PRODUCTION READINESS & DEPLOYMENT VERIFICATION
+ * WAMPIRE PRODUCTION READINESS & DEPLOYMENT VERIFICATION
  *
  * Verifies:
  * 1. Frontend-Backend Connectivity & Production CORS
@@ -21,7 +21,7 @@ import emailService from './services/emailService.js';
 import { generateOTP, hashOTP, verifyOTPHash } from './utils/otpUtils.js';
 
 console.log('='.repeat(75));
-console.log('     CODE-A-NOVA PRODUCTION DEPLOYMENT READINESS VERIFICATION');
+console.log('     WAMPIRE PRODUCTION DEPLOYMENT READINESS VERIFICATION');
 console.log('='.repeat(75));
 
 let passed = 0;
@@ -119,19 +119,19 @@ async function runProductionVerification() {
       const healthRes = await fetch(`${baseUrl}/api/v1/health`);
       const healthData = await healthRes.json();
       check(healthRes.status === 200, 'Health endpoint responds with HTTP 200 OK');
-      check(healthData.data?.service === 'CODE-A-NOVA API', 'API reports service name: CODE-A-NOVA API');
+      check(healthData.data?.service === 'WAMPIRE API', 'API reports service name: WAMPIRE API');
 
       // Test CORS Preflight for Vercel
       const corsRes = await fetch(`${baseUrl}/api/v1/health`, {
         method: 'OPTIONS',
         headers: {
-          Origin: 'https://code-a-nova.vercel.app',
+          Origin: 'https://wampire.vercel.app',
           'Access-Control-Request-Method': 'POST',
         },
       });
       const corsOrigin = corsRes.headers.get('access-control-allow-origin');
       check(
-        corsOrigin === 'https://code-a-nova.vercel.app' || corsOrigin === '*',
+        corsOrigin === 'https://wampire.vercel.app' || corsOrigin === '*',
         'CORS preflight authorizes production Vercel frontend origin'
       );
       check(
@@ -182,8 +182,8 @@ async function runProductionVerification() {
       check(setCookieHeader.includes('HttpOnly'), 'Set-Cookie header sets HttpOnly flag preventing XSS token theft');
 
       console.log('\n--- 3. Testing Production Email Delivery & Branding ---');
-      check(email?.from?.includes('Code-a-Nova'), 'Email sender name remains strictly "Code-a-Nova"');
-      check(email?.subject?.includes('Verify Your Code-a-Nova Account'), 'Email subject matches official verification title');
+      check(email?.from?.includes('Wampire'), 'Email sender name remains strictly "Wampire"');
+      check(email?.subject?.includes('Verify Your Wampire Account'), 'Email subject matches official verification title');
       check(email?.html?.includes('10 minutes'), 'Email HTML contains 10-minute security expiry notice');
 
       console.log('\n--- 4. Testing Hackathon Registration Persistence ---');
@@ -220,7 +220,7 @@ async function runProductionVerification() {
 
       const regData = await regRes.json();
       check(regRes.status === 201, 'Hackathon squad registration persists with HTTP 201 Created');
-      check(Boolean(regData.data?.registrationId?.startsWith('CAN-REG-')), 'Registration ID adheres to CAN-REG-XXXXXXXX format');
+      check(Boolean(regData.data?.registrationId?.startsWith('WAM-REG-')), 'Registration ID adheres to WAM-REG-XXXXXXXX format');
 
       const confEmail = emailService.getLastDispatchedEmail();
       check(

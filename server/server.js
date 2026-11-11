@@ -4,7 +4,7 @@ import connectDB from './config/db.js';
 
 const startServer = async () => {
   console.log('='.repeat(50));
-  console.log('    CODE-A-NOVA HACKATHON BACKEND SERVER');
+  console.log('    WAMPIRE HACKATHON BACKEND SERVER');
   console.log('='.repeat(50));
   console.log(`[Config] Environment: ${config.env}`);
   console.log(`[Config] Port: ${config.port}`);

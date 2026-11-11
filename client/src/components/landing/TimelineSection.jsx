@@ -5,71 +5,78 @@ import { TIMELINE_STEPS } from '../../utils/constants.js';
 
 export const TimelineSection = () => {
   const stepIcons = [
-    <UserCheck className="w-5 h-5 text-blue-600" />,
-    <Users className="w-5 h-5 text-violet-600" />,
-    <FileText className="w-5 h-5 text-indigo-600" />,
-    <Code2 className="w-5 h-5 text-blue-600" />,
-    <CheckSquare className="w-5 h-5 text-emerald-600" />,
-    <Trophy className="w-5 h-5 text-amber-500" />,
+    <UserCheck className="w-5 h-5 text-[#FF007F]" />,
+    <Users className="w-5 h-5 text-black" />,
+    <FileText className="w-5 h-5 text-[#FF007F]" />,
+    <Code2 className="w-5 h-5 text-black" />,
+    <CheckSquare className="w-5 h-5 text-[#FF007F]" />,
+    <Trophy className="w-5 h-5 text-black" />,
   ];
 
   return (
-    <section id="timeline" className="py-20 lg:py-28 bg-white border-b border-slate-200/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="timeline" className="py-24 bg-white border-b border-black/10 relative tech-grid-light">
+      {/* Background ambient lighting */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-[#FF007F]/5 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-4 mb-20">
-          <Badge variant="primary" size="md">
-            Hackathon Timeline
+          <Badge variant="pink" size="md">
+            HACKATHON TIMELINE
           </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
-            From Blueprint to Working Prototype
+          <h2 className="text-3xl sm:text-5xl font-serif font-black text-black tracking-tight">
+            FROM BLUEPRINT TO{' '}
+            <span className="gradient-text-neon italic">DEPLOYMENT.</span>
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg">
-            A step-by-step roadmap mapping the hackathon progression from initial registration to final evaluation.
+          <p className="text-neutral-600 text-sm sm:text-base leading-relaxed font-sans">
+            A dynamic 5-phase roadmap mapping your trajectory from initial account setup and squad formation to final production review and victory.
           </p>
         </div>
 
-        {/* Timeline Steps Grid (6 steps) */}
+        {/* Timeline Steps Grid (6 steps) on Light Theme */}
         <div className="relative">
           {/* Subtle connecting line across desktop */}
-          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-blue-100 via-indigo-100 to-violet-100 -translate-y-1/2 z-0" />
+          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#FF007F]/30 to-transparent -translate-y-1/2 z-0" />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
             {TIMELINE_STEPS.map((step, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-3xl p-7 border border-slate-200 shadow-soft-sm hover:shadow-soft-xl hover:border-blue-300 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between"
+                className="bg-white rounded-3xl p-7 border border-black/10 hover:border-[#FF007F] shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_-5px_rgba(255,0,127,0.15)] transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-6">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shadow-soft-sm">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FF007F]/10 border border-[#FF007F]/20 flex items-center justify-center group-hover:scale-110 group-hover:border-[#FF007F] transition-all">
                       {stepIcons[idx]}
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-bold text-slate-400">
-                        {step.step}
+                      <span className="text-xs font-mono font-bold text-neutral-500">
+                        [{step.step}]
                       </span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#FF007F] bg-[#FF007F]/10 border border-[#FF007F]/30 px-2.5 py-1 rounded-full font-bold">
                         {step.phase}
                       </span>
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-extrabold text-slate-900 mb-2">
+                  <h3 className="text-xl font-display font-bold text-black mb-2 group-hover:text-[#FF007F] transition-colors">
                     {step.title}
                   </h3>
 
-                  <p className="text-sm text-slate-600 leading-relaxed">
+                  <p className="text-xs text-neutral-600 leading-relaxed font-sans">
                     {step.description}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-blue-600" />
-                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                    {step.title} Stage
-                  </span>
+                <div className="mt-6 pt-4 border-t border-black/10 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#FF007F] animate-pulse" />
+                    <span className="text-xs font-mono font-bold text-neutral-800 uppercase tracking-wider">
+                      {step.title} Stage
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-neutral-500 font-semibold">SYNCED</span>
                 </div>
               </div>
             ))}
@@ -82,4 +89,3 @@ export const TimelineSection = () => {
 };
 
 export default TimelineSection;
-
