@@ -1,3 +1,6 @@
-export { useToast } from '../context/ToastContext.jsx';
+import { useToast } from '../context/ToastContext.jsx';
+
+export { useToast };
 export default useToast;
+
 
