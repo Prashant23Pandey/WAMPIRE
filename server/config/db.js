@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import config from './env.js';
 import initializeDatabase from './initDB.js';
+import { setupMockDbEngine, isMockEngineActive } from './mockDbEngine.js';
 
 // Configure fast fail when offline instead of 10s buffering
 mongoose.set('bufferTimeoutMS', 3000);
@@ -53,7 +54,14 @@ export const connectDB = async (customUri = null) => {
     const safeErrorMessage = error.message.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@');
     console.error(`[MongoDB Connection Error] ${safeErrorMessage}`);
     console.warn(`[MongoDB] Failed to connect to: ${sanitizedUri}`);
-    console.warn('[MongoDB] Server will continue running, but database operations will fail until MongoDB is accessible.');
+
+    // If running in development and MongoDB is offline, automatically activate in-memory engine
+    if (!config.isProduction) {
+      console.log('[MongoDB Fallback] Activating in-memory database engine for offline local development.');
+      setupMockDbEngine();
+    } else {
+      console.warn('[MongoDB] Server will continue running, but database operations will fail until MongoDB is accessible.');
+    }
     return null;
   }
 };
@@ -67,6 +75,16 @@ export const disconnectDB = async () => {
 };
 
 export const getConnectionStatus = () => {
+  if (isMockEngineActive()) {
+    return {
+      state: 'connected (in-memory mock)',
+      statusCode: 1,
+      isConnected: true,
+      host: 'localhost (in-memory mock)',
+      name: 'code_a_nova_mock',
+    };
+  }
+
   const states = {
     0: 'disconnected',
     1: 'connected',
