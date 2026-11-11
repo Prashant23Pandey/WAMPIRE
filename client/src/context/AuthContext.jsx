@@ -5,8 +5,13 @@ export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('code_a_nova_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('code_a_nova_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      try { localStorage.removeItem('code_a_nova_user'); } catch {}
+      return null;
+    }
   });
   const [token, setToken] = useState(() => localStorage.getItem('code_a_nova_token') || null);
   const [isLoading, setIsLoading] = useState(true);
