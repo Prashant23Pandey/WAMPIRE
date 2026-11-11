@@ -1,0 +1,32 @@
+{
+  "name": "code-a-nova-portal",
+  "version": "1.0.0",
+  "description": "CODE-A-NOVA Hackathon Registration Portal (MERN Stack)",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start",
+    "test": "npm --prefix client test && npm --prefix server run test:all",
+    "test:audit": "npm --prefix server run test:audit",
+    "server": "npm --prefix server run dev",
+    "server:start": "npm --prefix server start",
+    "client": "npm --prefix client run dev",
+    "client:build": "npm --prefix client run build",
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue,green\" \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "mern",
+    "hackathon",
+    "portal",
+    "code-a-nova",
+    "react",
+    "express",
+    "mongodb"
+  ],
+  "author": "CODE-A-NOVA Architecture Team",
+  "license": "ISC"
+}

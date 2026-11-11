@@ -1,0 +1,485 @@
+{
+  "info": {
+    "name": "CODE-A-NOVA Hackathon API Collection",
+    "_postman_id": "c0de-a-n0va-api-v1-collection",
+    "description": "Comprehensive Postman Collection for CODE-A-NOVA Hackathon Registration Portal. Covers AUTH, USER, HACKATHON, CONTACT, and ADMIN CRUD endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "registrationId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "description": "Participant signup, cryptographic OTP verification, and JWT login.",
+      "item": [
+        {
+          "name": "POST /api/auth/signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Ada Lovelace\",\n  \"email\": \"ada@codeanova.dev\",\n  \"password\": \"HackathonPass2026!\",\n  \"confirmPassword\": \"HackathonPass2026!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "signup"]
+            },
+            "description": "Registers a new participant account, hashes password with bcrypt, and dispatches a 6-digit OTP via Nodemailer."
+          }
+        },
+        {
+          "name": "POST /api/auth/verify-otp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ada@codeanova.dev\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/verify-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "verify-otp"]
+            },
+            "description": "Verifies the 6-digit OTP code, invalidates the hash in MongoDB, and marks isVerified = true."
+          }
+        },
+        {
+          "name": "POST /api/auth/resend-otp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ada@codeanova.dev\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/resend-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "resend-otp"]
+            },
+            "description": "Issues a fresh 6-digit OTP respecting the 60-second rate-limit cooldown."
+          }
+        },
+        {
+          "name": "POST /api/auth/login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.token) {",
+                  "  pm.collectionVariables.set('authToken', json.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ada@codeanova.dev\",\n  \"password\": \"HackathonPass2026!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Authenticates verified participants and returns a signed JWT Bearer token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. User Profile",
+      "description": "Authenticated user profile inspection and updates.",
+      "item": [
+        {
+          "name": "GET /api/user/me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/user/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "me"]
+            },
+            "description": "Retrieves the authenticated user's profile with sensitive password and OTP fields excluded."
+          }
+        },
+        {
+          "name": "PUT /api/user/update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Augusta Ada Lovelace\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user/update",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "update"]
+            },
+            "description": "Updates allowed participant profile fields (e.g., fullName, or password with validation)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Hackathon Registration (CRUD)",
+      "description": "Full lifecycle of hackathon team entries: register, inspect, update, and policy-governed delete.",
+      "item": [
+        {
+          "name": "POST /api/hackathon/register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.registration && json.data.registration._id) {",
+                  "  pm.collectionVariables.set('registrationId', json.data.registration._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Augusta Ada Lovelace\",\n  \"email\": \"ada@codeanova.dev\",\n  \"mobileNumber\": \"9876543210\",\n  \"collegeName\": \"Birla Institute of Technology and Science (BITS) Pilani\",\n  \"course\": \"B.Tech\",\n  \"branch\": \"CSE\",\n  \"yearOfStudy\": \"3rd Year\",\n  \"domain\": \"AI/ML\",\n  \"projectName\": \"Neural Analytical Engine\",\n  \"pptLink\": \"https://drive.google.com/file/d/sample-presentation/view\",\n  \"prototypeLink\": \"https://github.com/adalovelace/neural-engine\",\n  \"demoVideoLink\": \"https://youtube.com/watch?v=sample-demo-video\",\n  \"teamSize\": 2,\n  \"teamMembers\": [\n    {\n      \"name\": \"Charles Babbage\",\n      \"email\": \"babbage@cambridge.ac.uk\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hackathon/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hackathon", "register"]
+            },
+            "description": "Creates a new hackathon entry linked to req.user._id, preventing duplicates and dispatching confirmation email."
+          }
+        },
+        {
+          "name": "GET /api/hackathon/my-entry",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hackathon/my-entry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hackathon", "my-entry"]
+            },
+            "description": "Fetches the current participant's registered project entry and squad members."
+          }
+        },
+        {
+          "name": "GET /api/hackathon/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hackathon/{{registrationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hackathon", "{{registrationId}}"]
+            },
+            "description": "Retrieves registration details by ID. Verifies that caller is either the owner or an administrator."
+          }
+        },
+        {
+          "name": "PATCH /api/hackathon/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projectName\": \"Neural Analytical Engine v2.0\",\n  \"pptLink\": \"https://drive.google.com/file/d/updated-presentation/view\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hackathon/{{registrationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hackathon", "{{registrationId}}"]
+            },
+            "description": "Updates project links or team info if caller is the owner and registration is not approved."
+          }
+        },
+        {
+          "name": "DELETE /api/hackathon/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hackathon/{{registrationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hackathon", "{{registrationId}}"]
+            },
+            "description": "Deletes the registration record. Caller must be the owner (status must be pending) or an administrator."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Contact & Inquiries",
+      "description": "Inquiry submissions for mentoring, tracks, and support.",
+      "item": [
+        {
+          "name": "POST /api/contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ada Lovelace\",\n  \"email\": \"ada@codeanova.dev\",\n  \"message\": \"Inquiring about mentorship office hours for the AI/ML challenge track.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/contact",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "contact"]
+            },
+            "description": "Public contact inquiry submission with 10-character minimum message validation."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Admin Management",
+      "description": "Administrative authentication, metrics, registration review, and status changes.",
+      "item": [
+        {
+          "name": "POST /api/admin/login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.token) {",
+                  "  pm.collectionVariables.set('adminToken', json.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@codeanova.io\",\n  \"password\": \"AdminSecure2026!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "login"]
+            },
+            "description": "Authenticates administrators and issues an admin role JWT token."
+          }
+        },
+        {
+          "name": "GET /api/admin/stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "stats"]
+            },
+            "description": "Aggregates platform statistics: total users, registrations, approved, pending, and inquiries."
+          }
+        },
+        {
+          "name": "GET /api/admin/registrations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/registrations?domain=AI/ML&status=pending&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "registrations"],
+              "query": [
+                {
+                  "key": "domain",
+                  "value": "AI/ML"
+                },
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Fetches all hackathon registrations with domain/status filtering, search, and pagination."
+          }
+        },
+        {
+          "name": "PATCH /api/admin/registrations/:id/status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/registrations/{{registrationId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "registrations", "{{registrationId}}", "status"]
+            },
+            "description": "Updates registration status to approved, rejected, or shortlisted."
+          }
+        },
+        {
+          "name": "DELETE /api/admin/registrations/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/registrations/{{registrationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "registrations", "{{registrationId}}"]
+            },
+            "description": "Administrative deletion of any registration."
+          }
+        }
+      ]
+    }
+  ]
+}
+
