@@ -11,6 +11,7 @@ import {
   XCircle,
   Sparkles,
   ArrowRight,
+  Trash2,
 } from 'lucide-react';
 import Badge from '../common/Badge.jsx';
 import Button from '../common/Button.jsx';
@@ -19,6 +20,7 @@ export const RegistrationStatusCard = ({
   registration,
   onOpenRegister,
   onViewRegistration,
+  onWithdrawRegistration,
 }) => {
   // Scenario A: User has not registered yet
   if (!registration) {
@@ -212,7 +214,26 @@ export const RegistrationStatusCard = ({
       </div>
 
       {/* Action Footer */}
-      <div className="pt-2 flex justify-end">
+      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100">
+        {onWithdrawRegistration ? (
+          <button
+            type="button"
+            onClick={onWithdrawRegistration}
+            disabled={registration.registrationStatus === 'approved'}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-transparent hover:border-rose-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors"
+            title={
+              registration.registrationStatus === 'approved'
+                ? 'Approved entries cannot be withdrawn'
+                : 'Withdraw this registration entry'
+            }
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Withdraw Entry</span>
+          </button>
+        ) : (
+          <div />
+        )}
+
         <Button
           variant="secondary"
           size="sm"

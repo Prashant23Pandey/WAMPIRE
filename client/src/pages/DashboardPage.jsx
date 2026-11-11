@@ -19,6 +19,7 @@ import {
   Award,
   Phone,
   FileText,
+  Trash2,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.js';
 import { useToast } from '../hooks/useToast.js';
@@ -34,6 +35,7 @@ import QuickActions from '../components/dashboard/QuickActions.jsx';
 import LoadingSkeleton from '../components/dashboard/LoadingSkeleton.jsx';
 import EditProfileModal from '../components/dashboard/EditProfileModal.jsx';
 import RegistrationModal from '../components/dashboard/RegistrationModal.jsx';
+import Modal from '../components/common/Modal.jsx';
 import Button from '../components/common/Button.jsx';
 import Alert from '../components/common/Alert.jsx';
 import Badge from '../components/common/Badge.jsx';
@@ -56,6 +58,8 @@ export const DashboardPage = () => {
   // Modal States
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
 
   // Support Form State
   const [supportMessage, setSupportMessage] = useState('');
@@ -133,6 +137,23 @@ export const DashboardPage = () => {
       toast.error(err.message || 'Failed to submit support request.');
     } finally {
       setSupportSending(false);
+    }
+  };
+
+  // Handle Withdraw Registration
+  const handleConfirmWithdraw = async () => {
+    if (!registration?._id) return;
+    setIsWithdrawing(true);
+    try {
+      await hackathonService.deleteRegistration(registration._id);
+      toast.success('Your hackathon registration has been safely withdrawn.', 'Registration Withdrawn');
+      setRegistration(null);
+      setIsWithdrawModalOpen(false);
+      fetchDashboardData();
+    } catch (err) {
+      toast.error(err.message || 'Failed to withdraw registration.');
+    } finally {
+      setIsWithdrawing(false);
     }
   };
 
@@ -250,6 +271,7 @@ export const DashboardPage = () => {
                         registration={registration}
                         onOpenRegister={() => navigate('/dashboard/register')}
                         onViewRegistration={() => setActiveTab('registration')}
+                        onWithdrawRegistration={() => setIsWithdrawModalOpen(true)}
                       />
                     </div>
                   </div>
@@ -335,6 +357,7 @@ export const DashboardPage = () => {
                     registration={registration}
                     onOpenRegister={() => navigate('/dashboard/register')}
                     onViewRegistration={() => setActiveTab('team')}
+                    onWithdrawRegistration={() => setIsWithdrawModalOpen(true)}
                   />
 
                   {registration && (
@@ -619,6 +642,47 @@ export const DashboardPage = () => {
         user={activeUser}
         onRegistrationCompleted={(newReg) => setRegistration(newReg)}
       />
+
+      {/* Withdraw Registration Confirmation Modal */}
+      <Modal
+        isOpen={isWithdrawModalOpen}
+        onClose={() => !isWithdrawing && setIsWithdrawModalOpen(false)}
+        title="Withdraw Hackathon Registration"
+        maxWidth="max-w-md"
+      >
+        <div className="p-6 space-y-4 text-left">
+          <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
+            <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
+            <p>
+              Are you sure you want to withdraw your registration for <strong className="text-white font-bold">{registration?.projectName || 'this project'}</strong>? This action cannot be undone.
+            </p>
+          </div>
+
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Withdrawing your entry will relinquish your Registration ID (<span className="font-mono text-blue-400 font-bold">{registration?._id ? `CAN-REG-${registration._id.slice(-8).toUpperCase()}` : ''}</span>) and remove your squad roster from evaluation round 1.
+          </p>
+
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+            <button
+              type="button"
+              disabled={isWithdrawing}
+              onClick={() => setIsWithdrawModalOpen(false)}
+              className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              Keep Registration
+            </button>
+            <Button
+              variant="danger"
+              size="sm"
+              isLoading={isWithdrawing}
+              onClick={handleConfirmWithdraw}
+              leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+            >
+              Withdraw Entry
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
